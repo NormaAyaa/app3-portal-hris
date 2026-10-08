@@ -1,36 +1,74 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Portal HRIS Sedap
 
-## Getting Started
+Codebase starter App 3 untuk Sesi 6 Bootcamp AI Web Programming. Aplikasi ini mencatat presensi dan cuti karyawan Sedap. Semua halaman sudah tampil dengan data contoh. Login, pengalihan sesuai peran, dan *route guard* sengaja belum dipasang karena itu bahan praktik Sesi 6.
 
-First, run the development server:
+Kebutuhan produk lengkap ada di [docs/PRD_App_3.md](docs/PRD_App_3.md).
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Cara Menjalankan
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+1. Pasang paket.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+   ```bash
+   npm install
+   ```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+2. Salin `.env.local.example` menjadi `.env.local`, lalu isi dengan konfigurasi proyek Firebase.
 
-## Learn More
+   ```bash
+   cp .env.local.example .env.local
+   ```
 
-To learn more about Next.js, take a look at the following resources:
+   Di Command Prompt Windows, pakai `copy .env.local.example .env.local`.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+3. Jalankan server pengembangan, lalu buka http://localhost:3000.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+   ```bash
+   npm run dev
+   ```
 
-## Deploy on Vercel
+Alamat `/` langsung mengarah ke `/masuk`. Halaman lain bisa dibuka langsung dari alamatnya walaupun belum masuk.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Daftar Halaman
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+| Halaman | Alamat | Kondisi di starter |
+|---|---|---|
+| Masuk | `/masuk` | Formulir dan tombol Google tampil, belum tersambung |
+| Daftar | `/daftar` | Formulir dan tombol Google tampil, belum tersambung |
+| Beranda | `/beranda` | Data contoh |
+| Presensi Saya | `/presensi?bulan=2026-09` | Bulan tersimpan di alamat, tombol Catat Masuk dan Catat Pulang tidak menyimpan |
+| Cuti Saya | `/cuti` | Data contoh, urutan terbaru |
+| Ajukan Cuti | `/cuti/baru` | Validasi tanggal, tidak menyimpan |
+| Rincian Cuti | `/cuti/C001` | Nomor yang tidak ada menampilkan "Pengajuan tidak ditemukan" |
+| Profil | `/profil` | Nama bisa diubah di tampilan |
+| Dasbor HRD | `/admin` | Data contoh, tanpa pemeriksaan peran |
+| Data Karyawan | `/admin/karyawan` | Pencarian nama |
+| Rincian Karyawan | `/admin/karyawan/dina` | Peran bisa diubah di tampilan |
+| Persetujuan Cuti | `/admin/cuti?status=menunggu` | Saringan status tersimpan di alamat, Setujui dan Tolak tidak menyimpan |
+| Laporan | `/admin/laporan?bulan=2026-09` | Bulan tersimpan di alamat |
+| Tidak Ditemukan | alamat lain | Tombol kembali ke Beranda |
+
+Semua halaman di bawah `/admin` sengaja bisa dibuka siapa saja. Penjagaannya dikerjakan di Sesi 6.
+
+## Data Contoh
+
+Starter belum membaca atau menulis Firestore. Semua halaman mengambil data dari `lib/data.js`, yang membaca `lib/dataContoh.js` dengan jeda 400 ms supaya layar Memuat terlihat.
+
+Pengguna yang sedang "masuk" berasal dari `usePengguna()` di `lib/pengguna.js`. Nilainya sementara: uid `dina` dan peran `hrd`, supaya halaman karyawan berisi data Dina dan semua menu HRD tampil.
+
+| Nama | Email | Peran |
+|---|---|---|
+| Dina | dina@sedap.id | karyawan |
+| Nisa | nisa@sedap.id | karyawan |
+| Wulan | wulan@sedap.id | hrd |
+
+Lima karyawan lain melengkapi daftar: Rama, Sari, Budi, Ayu, dan Joko.
+
+## Yang Dikerjakan di Sesi 6
+
+1. Menambahkan Firebase Authentication di `lib/firebase.js`.
+2. Menyambungkan halaman Masuk dan Daftar ke login email dan Google.
+3. Membuat dokumen `users/{uid}` saat pengguna pertama kali masuk.
+4. Membuat akun HRD pertama lewat Firebase MCP.
+5. Mengganti `usePengguna()` dengan data dari Firebase Auth dan dokumen `users/{uid}`.
+6. Mengarahkan pengguna sesuai peran setelah masuk.
+7. Memasang *route guard* untuk halaman karyawan dan halaman HRD dengan komponen `Memuat` dan `AksesDitolak`.
