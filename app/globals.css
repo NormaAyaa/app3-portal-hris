@@ -36,9 +36,9 @@
   --color-terong: #7b2d63;
   --color-krem: #fff6e0;
 
-  /* Bayangan keras tanpa blur, ciri tampilan ini / Hard, blur-free shadow that defines this look */
-  --shadow-keras: 4px 4px 0 0 var(--color-tinta);
-  --shadow-keras-kecil: 2px 2px 0 0 var(--color-tinta);
+  /* Bayangan halus untuk kartu dan tombol / Soft shadows for cards and buttons */
+  --shadow-kartu: 0 1px 2px rgb(11 63 59 / 0.06), 0 8px 24px -12px rgb(11 63 59 / 0.18);
+  --shadow-tipis: 0 1px 2px rgb(11 63 59 / 0.08);
 }
 
 body {
@@ -54,30 +54,30 @@ body {
  * @utility is used because Tailwind v4 can only @apply utilities, not plain classes.
  */
 @utility tombol {
-  @apply inline-flex items-center justify-center gap-2 rounded-xl border-2 border-tinta px-5 py-2.5 font-bold transition;
-  @apply hover:-translate-y-0.5 active:translate-y-0 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:translate-y-0;
+  @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-2.5 font-semibold transition;
+  @apply focus-visible:ring-4 focus-visible:ring-sedap/30 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-40;
 }
 @utility tombol-utama {
-  @apply tombol bg-sedap text-white shadow-keras;
+  @apply tombol bg-sedap text-white shadow-tipis hover:bg-[#0c625b];
 }
 @utility tombol-kunyit {
-  @apply tombol bg-kunyit text-tinta shadow-keras;
+  @apply tombol bg-kunyit text-tinta shadow-tipis hover:bg-[#f5bc22];
 }
 @utility tombol-kedua {
-  @apply tombol bg-panel text-tinta shadow-keras-kecil;
+  @apply tombol border border-tinta/15 bg-panel text-tinta shadow-tipis hover:bg-latar;
 }
 @utility kartu {
-  @apply rounded-2xl border-2 border-tinta bg-panel shadow-keras;
+  @apply rounded-2xl border border-tinta/10 bg-panel shadow-kartu;
 }
 @utility isian {
-  @apply w-full rounded-xl border-2 border-tinta/25 bg-panel px-3 py-2.5 text-teks transition;
-  @apply focus:border-sedap focus:ring-4 focus:ring-sedap/20 focus:outline-none;
+  @apply w-full rounded-xl border border-tinta/15 bg-panel px-3 py-2.5 text-teks transition;
+  @apply focus:border-sedap focus:ring-4 focus:ring-sedap/15 focus:outline-none;
 }
 @utility label {
-  @apply mb-1.5 block text-sm font-bold text-tinta;
+  @apply mb-1.5 block text-sm font-semibold text-tinta;
 }
 @utility galat {
-  @apply mt-1.5 text-sm font-semibold text-red-700;
+  @apply mt-1.5 text-sm font-medium text-red-700;
 }
 
 @layer components {
@@ -85,9 +85,9 @@ body {
     @apply w-full text-left text-sm tabular-nums;
   }
   .tabel th {
-    @apply bg-krem px-4 py-3 text-xs font-extrabold tracking-wide text-tinta uppercase;
+    @apply bg-latar px-4 py-3 text-xs font-semibold tracking-wide text-redup uppercase;
   }
   .tabel td {
-    @apply border-t-2 border-latar px-4 py-3;
+    @apply border-t border-tinta/5 px-4 py-3;
   }
 }

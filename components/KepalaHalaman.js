@@ -19,10 +19,10 @@ const warnaModul = {
 export default function KepalaHalaman({ judul, keterangan, warna = "sedap", ikon, children }) {
   return (
     <header className={`kartu relative overflow-hidden p-6 md:p-8 ${warnaModul[warna]}`}>
-      {ikon && <Ikon nama={ikon} className="absolute -right-6 -bottom-8 h-40 w-40 opacity-15" />}
+      {ikon && <Ikon nama={ikon} className="absolute -right-6 -bottom-8 h-40 w-40 opacity-10" />}
       <div className="relative flex flex-wrap items-end justify-between gap-4">
         <div className="max-w-xl">
-          <h1 className="text-3xl font-black tracking-tight md:text-4xl">{judul}</h1>
+          <h1 className="text-3xl font-bold tracking-tight md:text-4xl">{judul}</h1>
           {keterangan && <div className="mt-2 font-medium opacity-90">{keterangan}</div>}
         </div>
         {children && <div className="flex flex-wrap gap-3">{children}</div>}

@@ -20,7 +20,7 @@ Repo ini codebase starter. Semua halaman sudah tampil dengan data contoh. Login,
 
 Warna PRD Bab 5 tersedia sebagai kelas Tailwind dengan nama `sedap`, `latar`, `panel`, `teks`, `redup`, `menunggu`, `disetujui`, dan `ditolak`, misalnya `bg-sedap` atau `text-redup`. Empat warna aksen ditambahkan: `tinta` untuk garis dan menu, `kunyit` untuk penanda aktif dan modul cuti, `terong` untuk profil, dan `krem` untuk latar sorotan. Definisinya ada di `app/globals.css`.
 
-Tampilan memakai garis tebal `border-2 border-tinta` dan bayangan keras `shadow-keras`. Pakai kelas bersama dari `app/globals.css` supaya halaman baru seragam:
+Tampilan memakai warna modul yang tegas di atas permukaan bersih: garis tipis `border border-tinta/10` dan bayangan halus `shadow-kartu` atau `shadow-tipis`. Pakai kelas bersama dari `app/globals.css` supaya halaman baru seragam:
 
 | Kelas | Dipakai untuk |
 |---|---|

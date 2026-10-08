@@ -20,13 +20,13 @@ export default function HalamanProfil() {
       <KepalaHalaman judul="Profil" keterangan="Nama bisa kamu ubah. Email dan peran diatur oleh HRD." warna="terong" ikon="orang" />
 
       <form onSubmit={simpan} className="kartu overflow-hidden">
-        <div className="flex items-center gap-4 border-b-2 border-tinta bg-krem p-6">
-          <span className="grid h-16 w-16 place-items-center rounded-2xl border-2 border-tinta bg-terong text-3xl font-black text-white shadow-keras-kecil">
+        <div className="flex items-center gap-4 border-b border-tinta/10 bg-krem p-6">
+          <span className="grid h-16 w-16 place-items-center rounded-2xl border border-tinta/10 bg-terong text-3xl font-bold text-white shadow-tipis">
             {(nama.trim() || pengguna.nama).charAt(0)}
           </span>
           <div>
-            <p className="text-xl font-black text-tinta">{nama.trim() || pengguna.nama}</p>
-            <span className="mt-1 inline-block rounded-full border-2 border-tinta bg-kunyit px-3 py-0.5 text-xs font-extrabold text-tinta">
+            <p className="text-xl font-bold text-tinta">{nama.trim() || pengguna.nama}</p>
+            <span className="mt-1 inline-block rounded-full border border-tinta/10 bg-kunyit px-3 py-0.5 text-xs font-semibold text-tinta">
               {pengguna.role === "hrd" ? "HRD" : "Karyawan"}
             </span>
           </div>

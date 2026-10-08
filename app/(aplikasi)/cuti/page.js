@@ -65,7 +65,7 @@ export default function HalamanCuti() {
                   // Seluruh baris bisa diklik; tautan di Nomor untuk pengguna papan ketik / Whole row is clickable; the Nomor link serves keyboard users
                   <tr key={c.id} onClick={() => router.push(`/cuti/${c.id}`)} className="cursor-pointer transition hover:bg-krem">
                     <td>
-                      <Link href={`/cuti/${c.id}`} className="font-black text-sedap underline decoration-kunyit decoration-4 underline-offset-4">
+                      <Link href={`/cuti/${c.id}`} className="font-bold text-sedap hover:underline">
                         {c.id}
                       </Link>
                     </td>

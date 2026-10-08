@@ -25,13 +25,13 @@ export default function HalamanLaporan() {
   return (
     <div className="space-y-8">
       <KepalaHalaman judul="Laporan" keterangan={`Rekap kehadiran ${formatBulan(bulan)}. Ganti bulan untuk melihat rekap lain.`} warna="tinta" ikon="grafik">
-        <label className="flex items-center gap-3 rounded-xl border-2 border-tinta bg-panel px-3 py-1.5 font-bold text-tinta">
+        <label className="flex items-center gap-3 rounded-xl border border-tinta/10 bg-panel px-3 py-1.5 font-bold text-tinta">
           Bulan
           <input
             type="month"
             value={bulan}
             onChange={(e) => e.target.value && router.replace(`/admin/laporan?bulan=${e.target.value}`)}
-            className="rounded-lg border-2 border-tinta/25 px-2 py-1"
+            className="rounded-lg border border-tinta/15 px-2 py-1"
           />
         </label>
       </KepalaHalaman>
@@ -62,18 +62,18 @@ export default function HalamanLaporan() {
               <tbody>
                 {data.map((r) => (
                   <tr key={r.karyawanId} className="transition hover:bg-krem">
-                    <td className="font-black text-tinta">{r.nama}</td>
+                    <td className="font-bold text-tinta">{r.nama}</td>
                     <td>
                       <div className="flex items-center gap-3">
-                        <span className="w-6 text-right font-black">{r.hariHadir}</span>
+                        <span className="w-6 text-right font-bold">{r.hariHadir}</span>
                         <span className="h-3 flex-1 overflow-hidden rounded-full bg-latar">
                           <span className="block h-full rounded-full bg-sedap" style={{ width: `${(r.hariHadir / terbanyak) * 100}%` }} />
                         </span>
                       </div>
                     </td>
-                    <td className={`text-right font-black ${r.terlambat > 0 ? "text-red-700" : "text-redup"}`}>{r.terlambat}</td>
+                    <td className={`text-right font-bold ${r.terlambat > 0 ? "text-red-700" : "text-redup"}`}>{r.terlambat}</td>
                     <td className="text-right">
-                      <span className={r.cutiDisetujui > 0 ? "rounded-lg bg-kunyit px-2 py-0.5 font-black text-tinta" : "font-bold text-redup"}>
+                      <span className={r.cutiDisetujui > 0 ? "rounded-lg bg-kunyit px-2 py-0.5 font-bold text-tinta" : "font-bold text-redup"}>
                         {r.cutiDisetujui} hari
                       </span>
                     </td>

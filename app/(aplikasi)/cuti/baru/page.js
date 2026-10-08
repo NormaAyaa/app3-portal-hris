@@ -69,7 +69,7 @@ export default function HalamanAjukanCuti() {
           Kirim
         </button>
         {tersimpan && (
-          <p role="status" className="rounded-xl border-2 border-disetujui bg-disetujui/15 p-3 font-bold text-tinta">
+          <p role="status" className="rounded-xl border border-disetujui bg-disetujui/15 p-3 font-bold text-tinta">
             Tersimpan (contoh). Kembali ke Daftar Cuti...
           </p>
         )}

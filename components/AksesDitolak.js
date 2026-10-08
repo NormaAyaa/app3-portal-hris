@@ -14,7 +14,7 @@ export default function AksesDitolak({
 }) {
   return (
     <div className="kartu mx-auto max-w-md overflow-hidden text-center">
-      <h1 className="bg-ditolak py-8 text-4xl font-black text-white">Akses Ditolak</h1>
+      <h1 className="bg-ditolak py-8 text-4xl font-bold text-white">Akses Ditolak</h1>
       <div className="p-8">
         <p className="mb-6 font-medium text-teks">{alasan}</p>
         <Link href={kembaliKe} className="tombol-utama">

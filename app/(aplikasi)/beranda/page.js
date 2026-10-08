@@ -50,25 +50,25 @@ export default function HalamanBeranda() {
       {status === "gagal" && <Gagal onCobaLagi={cobaLagi} />}
       {status === "berhasil" && (
         <div className="grid gap-6 sm:grid-cols-2">
-          <Link href="/presensi" className="kartu group flex flex-col gap-4 p-6 transition hover:-translate-y-1">
-            <span className="grid h-12 w-12 place-items-center rounded-xl border-2 border-tinta bg-sedap text-white">
+          <Link href="/presensi" className="kartu group flex flex-col gap-4 p-6 transition hover:shadow-md">
+            <span className="grid h-12 w-12 place-items-center rounded-xl border border-tinta/10 bg-sedap text-white">
               <Ikon nama="jam" className="h-6 w-6" />
             </span>
             <div>
-              <p className="text-sm font-extrabold tracking-wide text-sedap uppercase">Presensi hari ini</p>
-              <p className="mt-1 text-2xl font-black text-tinta tabular-nums">{teksPresensi}</p>
+              <p className="text-sm font-semibold tracking-wide text-sedap uppercase">Presensi hari ini</p>
+              <p className="mt-1 text-2xl font-bold text-tinta tabular-nums">{teksPresensi}</p>
             </div>
             <span className="mt-auto text-sm font-bold text-redup group-hover:text-sedap">Buka Presensi Saya →</span>
           </Link>
 
-          <Link href="/cuti" className="kartu group flex flex-col gap-4 bg-kunyit p-6 transition hover:-translate-y-1">
-            <span className="grid h-12 w-12 place-items-center rounded-xl border-2 border-tinta bg-white text-tinta">
+          <Link href="/cuti" className="kartu group flex flex-col gap-4 bg-kunyit p-6 transition hover:shadow-md">
+            <span className="grid h-12 w-12 place-items-center rounded-xl border border-tinta/10 bg-white text-tinta">
               <Ikon nama="kalender" className="h-6 w-6" />
             </span>
             <div>
-              <p className="text-sm font-extrabold tracking-wide text-tinta uppercase">Cuti menunggu</p>
+              <p className="text-sm font-semibold tracking-wide text-tinta uppercase">Cuti menunggu</p>
               <p className="mt-1 text-tinta">
-                <span className="text-5xl font-black tabular-nums">{data.menunggu}</span>
+                <span className="text-5xl font-bold tabular-nums">{data.menunggu}</span>
                 <span className="ml-2 text-lg font-bold">pengajuan</span>
               </p>
             </div>

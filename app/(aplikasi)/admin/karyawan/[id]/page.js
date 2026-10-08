@@ -62,8 +62,8 @@ function FormPeran({ karyawan }) {
           {pilihanPeran.map((p) => (
             <label
               key={p.nilai}
-              className={`cursor-pointer rounded-xl border-2 p-4 transition has-[:focus-visible]:ring-4 has-[:focus-visible]:ring-sedap/40 ${
-                peran === p.nilai ? "border-tinta bg-kunyit shadow-keras-kecil" : "border-tinta/25 hover:border-tinta"
+              className={`cursor-pointer rounded-xl border p-4 transition has-[:focus-visible]:ring-4 has-[:focus-visible]:ring-sedap/40 ${
+                peran === p.nilai ? "border-sedap bg-sedap/5 ring-1 ring-sedap" : "border-tinta/15 hover:border-tinta/40"
               }`}
             >
               <input
@@ -77,7 +77,7 @@ function FormPeran({ karyawan }) {
                 }}
                 className="sr-only"
               />
-              <span className="block text-lg font-black text-tinta">{p.label}</span>
+              <span className="block text-lg font-bold text-tinta">{p.label}</span>
               <span className="mt-1 block text-sm font-medium text-tinta/80">{p.keterangan}</span>
             </label>
           ))}

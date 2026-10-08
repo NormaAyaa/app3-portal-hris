@@ -54,8 +54,8 @@ export default function HalamanPersetujuanCuti() {
             key={s.nilai}
             href={s.nilai === "semua" ? "/admin/cuti" : `/admin/cuti?status=${s.nilai}`}
             aria-current={status === s.nilai ? "page" : undefined}
-            className={`rounded-full border-2 border-tinta px-5 py-2 text-sm font-extrabold transition ${
-              status === s.nilai ? "bg-kunyit text-tinta shadow-keras-kecil" : "bg-panel text-tinta hover:bg-krem"
+            className={`rounded-full border border-tinta/10 px-5 py-2 text-sm font-semibold transition ${
+              status === s.nilai ? "bg-kunyit text-tinta shadow-tipis" : "bg-panel text-tinta hover:bg-krem"
             }`}
           >
             {s.label}
@@ -64,7 +64,7 @@ export default function HalamanPersetujuanCuti() {
       </nav>
 
       {pesan && (
-        <p role="status" className="rounded-xl border-2 border-tinta bg-krem p-4 font-bold text-tinta">
+        <p role="status" className="rounded-xl border border-tinta/10 bg-krem p-4 font-bold text-tinta">
           {pesan}
         </p>
       )}
@@ -79,13 +79,13 @@ export default function HalamanPersetujuanCuti() {
         <ul className="space-y-5">
           {tampil.map((c) => (
             <li key={c.id} className="kartu overflow-hidden">
-              <div className="flex flex-wrap items-center justify-between gap-3 border-b-2 border-tinta bg-krem px-5 py-3">
+              <div className="flex flex-wrap items-center justify-between gap-3 border-b border-tinta/10 bg-krem px-5 py-3">
                 <div className="flex items-center gap-3">
-                  <span className="grid h-10 w-10 place-items-center rounded-full border-2 border-tinta bg-panel font-black text-tinta">
+                  <span className="grid h-10 w-10 place-items-center rounded-full border border-tinta/10 bg-panel font-bold text-tinta">
                     {c.nama.charAt(0)}
                   </span>
                   <div>
-                    <p className="text-lg font-black text-tinta">{c.nama}</p>
+                    <p className="text-lg font-bold text-tinta">{c.nama}</p>
                     <p className="text-xs font-bold text-redup">{c.id}</p>
                   </div>
                 </div>
@@ -94,7 +94,7 @@ export default function HalamanPersetujuanCuti() {
 
               <div className="grid gap-5 p-5 md:grid-cols-[1fr_1fr]">
                 <div className="space-y-3">
-                  <p className="font-black text-tinta tabular-nums">
+                  <p className="font-bold text-tinta tabular-nums">
                     {formatTanggal(c.tanggalMulai)} – {formatTanggal(c.tanggalSelesai)}
                     <span className="ml-2 rounded-lg bg-sedap px-2 py-0.5 text-sm text-white">{lamaHari(c.tanggalMulai, c.tanggalSelesai)} hari</span>
                   </p>
@@ -117,14 +117,14 @@ export default function HalamanPersetujuanCuti() {
                           <Ikon nama="centang" />
                           Setujui
                         </button>
-                        <button type="button" onClick={() => putuskan(c, "ditolak")} className="tombol bg-panel text-red-700 shadow-keras-kecil">
+                        <button type="button" onClick={() => putuskan(c, "ditolak")} className="tombol border border-ditolak/40 bg-panel text-red-700 shadow-tipis hover:bg-ditolak/5">
                           Tolak
                         </button>
                       </div>
                     </>
                   ) : (
-                    <div className="rounded-xl border-2 border-dashed border-tinta/30 p-4">
-                      <p className="text-xs font-extrabold tracking-wide text-terong uppercase">Catatan HRD</p>
+                    <div className="rounded-xl border border-dashed border-tinta/20 p-4">
+                      <p className="text-xs font-semibold tracking-wide text-terong uppercase">Catatan HRD</p>
                       <p className="mt-1 font-semibold">{c.catatanHrd || <span className="text-redup">Tanpa catatan.</span>}</p>
                     </div>
                   )}

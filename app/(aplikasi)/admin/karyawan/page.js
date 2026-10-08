@@ -22,7 +22,7 @@ export default function HalamanDataKaryawan() {
       <KepalaHalaman judul="Data Karyawan" keterangan="Klik nama karyawan untuk melihat rincian dan mengubah perannya." warna="tinta" ikon="tim" />
 
       <section className="kartu overflow-hidden">
-        <div className="border-b-2 border-tinta p-5">
+        <div className="border-b border-tinta/10 p-5">
           <label htmlFor="cari" className="sr-only">Cari nama</label>
           <div className="relative max-w-sm">
             <Ikon nama="cari" className="pointer-events-none absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-redup" />
@@ -62,8 +62,8 @@ export default function HalamanDataKaryawan() {
                 {tampil.map((k) => (
                   <tr key={k.id} className="transition hover:bg-krem">
                     <td>
-                      <Link href={`/admin/karyawan/${k.id}`} className="flex items-center gap-3 font-black text-tinta hover:text-sedap">
-                        <span className="grid h-9 w-9 place-items-center rounded-full border-2 border-tinta bg-krem text-sm">
+                      <Link href={`/admin/karyawan/${k.id}`} className="flex items-center gap-3 font-bold text-tinta hover:text-sedap">
+                        <span className="grid h-9 w-9 place-items-center rounded-full border border-tinta/10 bg-krem text-sm">
                           {k.nama.charAt(0)}
                         </span>
                         {k.nama}
@@ -72,7 +72,7 @@ export default function HalamanDataKaryawan() {
                     <td className="font-medium text-redup">{k.email}</td>
                     <td>
                       <span
-                        className={`rounded-full border-2 border-tinta px-3 py-0.5 text-xs font-extrabold ${
+                        className={`rounded-full border border-tinta/10 px-3 py-0.5 text-xs font-semibold ${
                           k.role === "hrd" ? "bg-terong text-white" : "bg-panel text-tinta"
                         }`}
                       >

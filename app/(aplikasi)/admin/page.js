@@ -33,37 +33,37 @@ export default function HalamanDasborHrd() {
         <div className="grid gap-6 md:grid-cols-2">
           <Link
             href="/admin/cuti?status=menunggu"
-            className="kartu group flex flex-col justify-between gap-6 bg-kunyit p-8 transition hover:-translate-y-1 md:row-span-2"
+            className="kartu group flex flex-col justify-between gap-6 bg-kunyit p-8 transition hover:shadow-md md:row-span-2"
           >
             <div>
-              <p className="text-sm font-extrabold tracking-wide text-tinta uppercase">Cuti menunggu</p>
-              <p className="mt-2 text-8xl leading-none font-black text-tinta tabular-nums">{data.cutiMenunggu}</p>
+              <p className="text-sm font-semibold tracking-wide text-tinta uppercase">Cuti menunggu</p>
+              <p className="mt-2 text-6xl leading-none font-bold text-tinta tabular-nums">{data.cutiMenunggu}</p>
               <p className="mt-2 text-lg font-bold text-tinta">pengajuan perlu diputuskan</p>
             </div>
-            <span className="tombol-utama self-start group-hover:-translate-y-0.5">
+            <span className="tombol-utama self-start ">
               <Ikon nama="centang" />
               Putuskan sekarang
             </span>
           </Link>
 
-          <Link href="/admin/laporan" className="kartu group flex items-center gap-5 bg-sedap p-6 text-white transition hover:-translate-y-1">
-            <span className="grid h-14 w-14 shrink-0 place-items-center rounded-xl border-2 border-tinta bg-white text-sedap">
+          <Link href="/admin/laporan" className="kartu group flex items-center gap-5 bg-sedap p-6 text-white transition hover:shadow-md">
+            <span className="grid h-14 w-14 shrink-0 place-items-center rounded-xl border border-tinta/10 bg-white text-sedap">
               <Ikon nama="jam" className="h-7 w-7" />
             </span>
             <div>
-              <p className="text-sm font-extrabold tracking-wide uppercase opacity-90">Kehadiran hari ini</p>
-              <p className="text-4xl font-black tabular-nums">{data.hadir}</p>
+              <p className="text-sm font-semibold tracking-wide uppercase opacity-90">Kehadiran hari ini</p>
+              <p className="text-4xl font-bold tabular-nums">{data.hadir}</p>
               <p className="font-bold text-kunyit tabular-nums">{data.terlambat} terlambat</p>
             </div>
           </Link>
 
-          <Link href="/admin/karyawan" className="kartu group flex items-center gap-5 bg-terong p-6 text-white transition hover:-translate-y-1">
-            <span className="grid h-14 w-14 shrink-0 place-items-center rounded-xl border-2 border-tinta bg-white text-terong">
+          <Link href="/admin/karyawan" className="kartu group flex items-center gap-5 bg-terong p-6 text-white transition hover:shadow-md">
+            <span className="grid h-14 w-14 shrink-0 place-items-center rounded-xl border border-tinta/10 bg-white text-terong">
               <Ikon nama="tim" className="h-7 w-7" />
             </span>
             <div>
-              <p className="text-sm font-extrabold tracking-wide uppercase opacity-90">Karyawan</p>
-              <p className="text-4xl font-black tabular-nums">{data.jumlahKaryawan}</p>
+              <p className="text-sm font-semibold tracking-wide uppercase opacity-90">Karyawan</p>
+              <p className="text-4xl font-bold tabular-nums">{data.jumlahKaryawan}</p>
               <p className="font-bold opacity-90">terdaftar</p>
             </div>
           </Link>

@@ -8,7 +8,7 @@ const gaya = {
 export default function PilStatus({ status }) {
   const s = gaya[status] ?? { label: status, kelas: "border-redup bg-latar", titik: "bg-redup" };
   return (
-    <span className={`inline-flex items-center gap-1.5 rounded-full border-2 px-3 py-0.5 text-xs font-extrabold text-tinta ${s.kelas}`}>
+    <span className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-0.5 text-xs font-semibold text-tinta ${s.kelas}`}>
       <span className={`h-2 w-2 rounded-full ${s.titik}`} />
       {s.label}
     </span>

@@ -36,8 +36,8 @@ export default function HalamanPresensi() {
 
       <section className="kartu grid gap-6 p-6 md:grid-cols-[1fr_auto] md:items-center">
         <div>
-          <p className="text-sm font-extrabold tracking-wide text-sedap uppercase">Hari ini</p>
-          <p className="mt-1 text-2xl font-black text-tinta tabular-nums">
+          <p className="text-sm font-semibold tracking-wide text-sedap uppercase">Hari ini</p>
+          <p className="mt-1 text-2xl font-bold text-tinta tabular-nums">
             {jamMasuk === null && "Belum presensi"}
             {jamMasuk !== null && jamPulang === null && `Masuk pukul ${formatJam(jamMasuk)}`}
             {jamPulang !== null && `Pulang pukul ${formatJam(jamPulang)}`}
@@ -66,7 +66,7 @@ export default function HalamanPresensi() {
       </section>
 
       <section className="kartu overflow-hidden">
-        <div className="flex flex-wrap items-center justify-between gap-4 border-b-2 border-tinta p-5">
+        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-tinta/10 p-5">
           <label className="flex items-center gap-3 font-bold text-tinta">
             Riwayat bulan
             <input
@@ -78,11 +78,11 @@ export default function HalamanPresensi() {
           </label>
           {status === "berhasil" && (
             <div className="flex gap-3 tabular-nums">
-              <span className="rounded-xl border-2 border-tinta bg-sedap px-4 py-1.5 font-bold text-white">
-                <span className="text-xl font-black">{data.length}</span> hadir
+              <span className="rounded-xl border border-tinta/10 bg-sedap px-4 py-1.5 font-bold text-white">
+                <span className="text-xl font-bold">{data.length}</span> hadir
               </span>
-              <span className="rounded-xl border-2 border-tinta bg-ditolak/15 px-4 py-1.5 font-bold text-tinta">
-                <span className="text-xl font-black">{jumlahTerlambat}</span> terlambat
+              <span className="rounded-xl border border-tinta/10 bg-ditolak/15 px-4 py-1.5 font-bold text-tinta">
+                <span className="text-xl font-bold">{jumlahTerlambat}</span> terlambat
               </span>
             </div>
           )}
@@ -95,7 +95,7 @@ export default function HalamanPresensi() {
             <Kosong teks={`Belum ada catatan presensi di ${formatBulan(bulan)}. Pilih bulan lain untuk melihat riwayat.`} />
           )}
           {status === "berhasil" && data.length > 0 && (
-            <div className="overflow-x-auto rounded-xl border-2 border-latar">
+            <div className="overflow-x-auto rounded-xl border border-tinta/10">
               <table className="tabel">
                 <thead>
                   <tr>
@@ -113,7 +113,7 @@ export default function HalamanPresensi() {
                       <td>{formatJam(p.jamPulang)}</td>
                       <td>
                         {terlambat(p.jamMasuk) ? (
-                          <span className="font-extrabold text-red-700">Terlambat</span>
+                          <span className="font-semibold text-red-700">Terlambat</span>
                         ) : (
                           <span className="font-semibold text-sedap">Tepat waktu</span>
                         )}

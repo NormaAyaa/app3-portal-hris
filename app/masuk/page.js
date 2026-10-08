@@ -76,19 +76,19 @@ export default function HalamanMasuk() {
       </div>
 
       <button type="button" onClick={masukGoogle} className="tombol-kedua w-full py-3">
-        <span className="grid h-6 w-6 place-items-center rounded-full bg-kunyit text-sm font-black text-tinta">G</span>
+        <span className="grid h-6 w-6 place-items-center rounded-full bg-kunyit text-sm font-bold text-tinta">G</span>
         Masuk dengan Google
       </button>
 
       {pesan && (
-        <p role="status" className="mt-5 rounded-xl border-2 border-menunggu bg-menunggu/15 p-3 text-sm font-bold text-tinta">
+        <p role="status" className="mt-5 rounded-xl border border-menunggu bg-menunggu/15 p-3 text-sm font-bold text-tinta">
           {pesan}
         </p>
       )}
 
       <p className="mt-6 text-center text-sm font-medium text-redup">
         Belum punya akun?{" "}
-        <Link href="/daftar" className="font-extrabold text-sedap underline decoration-kunyit decoration-4 underline-offset-4">
+        <Link href="/daftar" className="font-semibold text-sedap hover:underline">
           Daftar
         </Link>
       </p>

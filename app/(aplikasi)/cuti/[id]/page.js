@@ -35,29 +35,29 @@ export default function HalamanRincianCuti() {
       )}
       {status === "berhasil" && c && (
         <section className="kartu overflow-hidden">
-          <div className="grid border-b-2 border-tinta sm:grid-cols-2">
-            <div className="border-b-2 border-tinta p-5 sm:border-r-2 sm:border-b-0">
-              <p className="text-xs font-extrabold tracking-wide text-redup uppercase">Tanggal</p>
-              <p className="mt-1 text-lg font-black text-tinta tabular-nums">
+          <div className="grid border-b border-tinta/10 sm:grid-cols-2">
+            <div className="border-b border-tinta/10 p-5 sm:border-r sm:border-b-0">
+              <p className="text-xs font-semibold tracking-wide text-redup uppercase">Tanggal</p>
+              <p className="mt-1 text-lg font-bold text-tinta tabular-nums">
                 {formatTanggal(c.tanggalMulai)} – {formatTanggal(c.tanggalSelesai)}
               </p>
             </div>
             <div className="bg-krem p-5">
-              <p className="text-xs font-extrabold tracking-wide text-redup uppercase">Lama</p>
-              <p className="mt-1 text-lg font-black text-tinta tabular-nums">{lamaHari(c.tanggalMulai, c.tanggalSelesai)} hari</p>
+              <p className="text-xs font-semibold tracking-wide text-redup uppercase">Lama</p>
+              <p className="mt-1 text-lg font-bold text-tinta tabular-nums">{lamaHari(c.tanggalMulai, c.tanggalSelesai)} hari</p>
             </div>
           </div>
           <dl className="space-y-5 p-5">
             <div>
-              <dt className="text-xs font-extrabold tracking-wide text-redup uppercase">Alasan</dt>
+              <dt className="text-xs font-semibold tracking-wide text-redup uppercase">Alasan</dt>
               <dd className="mt-1 font-semibold">{c.alasan}</dd>
             </div>
-            <div className="rounded-xl border-2 border-dashed border-tinta/30 p-4">
-              <dt className="text-xs font-extrabold tracking-wide text-terong uppercase">Catatan HRD</dt>
+            <div className="rounded-xl border border-dashed border-tinta/20 p-4">
+              <dt className="text-xs font-semibold tracking-wide text-terong uppercase">Catatan HRD</dt>
               <dd className="mt-1 font-semibold">{c.catatanHrd || <span className="text-redup">HRD belum memberi catatan.</span>}</dd>
             </div>
             <div>
-              <dt className="text-xs font-extrabold tracking-wide text-redup uppercase">Diajukan</dt>
+              <dt className="text-xs font-semibold tracking-wide text-redup uppercase">Diajukan</dt>
               <dd className="mt-1 font-semibold tabular-nums">
                 {formatTanggal(c.diajukanPada)}, pukul {formatJam(c.diajukanPada)}
               </dd>

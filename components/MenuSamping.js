@@ -18,10 +18,10 @@ function TautanMenu({ href, label, ikon, aktif }) {
     <Link
       href={href}
       aria-current={aktif ? "page" : undefined}
-      className={`flex shrink-0 items-center gap-3 rounded-xl border-2 px-3 py-2.5 text-sm font-bold transition ${
+      className={`flex shrink-0 items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition ${
         aktif
-          ? "border-tinta bg-kunyit text-tinta shadow-keras-kecil"
-          : "border-transparent text-white/85 hover:bg-white/10 hover:text-white"
+          ? "bg-kunyit text-tinta shadow-tipis"
+          : "text-white/80 hover:bg-white/10 hover:text-white"
       }`}
     >
       <Ikon nama={ikon} />
@@ -50,12 +50,12 @@ export default function MenuSamping() {
 
       {/* <details> = menu buka-tutup bawaan peramban / <details> = the browser's built-in collapsible menu */}
       <details open={diCuti} className="group shrink-0">
-        <summary className="flex cursor-pointer list-none items-center gap-3 rounded-xl border-2 border-transparent px-3 py-2.5 text-sm font-bold text-white/85 hover:bg-white/10 hover:text-white">
+        <summary className="flex cursor-pointer list-none items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold text-white/80 hover:bg-white/10 hover:text-white">
           <Ikon nama="kalender" />
           Cuti Saya
           <Ikon nama="bawah" className="ml-auto h-4 w-4 transition group-open:rotate-180" />
         </summary>
-        <div className="mt-1 flex gap-1 md:ml-4 md:flex-col md:border-l-2 md:border-white/20 md:pl-2">
+        <div className="mt-1 flex gap-1 md:ml-4 md:flex-col md:border-l md:border-white/20 md:pl-2">
           <TautanMenu href="/cuti" label="Daftar Cuti" ikon="daftar" aktif={diCuti && !diAjukanCuti} />
           <TautanMenu href="/cuti/baru" label="Ajukan Cuti" ikon="tambah" aktif={diAjukanCuti} />
         </div>
@@ -65,7 +65,7 @@ export default function MenuSamping() {
 
       {pengguna?.role === "hrd" && (
         <>
-          <p className="hidden px-3 pt-6 pb-2 text-xs font-extrabold tracking-wider text-kunyit uppercase md:block">
+          <p className="hidden px-3 pt-6 pb-2 text-xs font-semibold tracking-wider text-kunyit uppercase md:block">
             Menu HRD
           </p>
           {menuHrd.map((m) => (
