@@ -1,26 +1,27 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/*
+ * Warna dan font dari PRD Bab 5. Tailwind v4 membaca konfigurasinya di sini,
+ * jadi kelas seperti bg-sedap, text-redup, atau bg-menunggu langsung bisa dipakai.
+ *
+ * Colors and font from PRD chapter 5. Tailwind v4 reads its config here,
+ * so classes like bg-sedap, text-redup, or bg-menunggu work right away.
+ */
+@theme {
+  --font-sans: var(--font-inter), system-ui, sans-serif;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --color-sedap: #0f766e;
+  --color-latar: #f4f7f9;
+  --color-panel: #ffffff;
+  --color-teks: #1f2937;
+  --color-redup: #5a6b78;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-menunggu: #f59e0b;
+  --color-disetujui: #15a66a;
+  --color-ditolak: #e53935;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-latar);
+  color: var(--color-teks);
 }
