@@ -17,13 +17,15 @@ export default function LayoutAplikasi({ children }) {
     <div className="flex min-h-screen flex-col">
       <BilahAtas />
       <div className="flex flex-1 flex-col md:flex-row">
-        <aside className="border-b border-gray-200 bg-panel md:w-60 md:shrink-0 md:border-r md:border-b-0">
+        <aside className="bg-tinta md:w-64 md:shrink-0">
           <Suspense>
             <MenuSamping />
           </Suspense>
         </aside>
-        <main className="min-w-0 flex-1 p-4 md:p-6">
-          <Suspense fallback={<Memuat />}>{children}</Suspense>
+        <main className="min-w-0 flex-1 p-4 md:p-8">
+          <div className="mx-auto max-w-5xl">
+            <Suspense fallback={<Memuat />}>{children}</Suspense>
+          </div>
         </main>
       </div>
     </div>

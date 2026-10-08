@@ -5,6 +5,8 @@ import { usePengguna } from "@/lib/pengguna";
 import { useAmbilData } from "@/lib/useAmbilData";
 import { ambilPresensiTanggal, ambilPengajuanCuti } from "@/lib/data";
 import { tanggalHariIni, formatJam, formatTanggal } from "@/lib/waktu";
+import KepalaHalaman from "@/components/KepalaHalaman";
+import Ikon from "@/components/Ikon";
 import Memuat from "@/components/Memuat";
 import Gagal from "@/components/Gagal";
 
@@ -28,35 +30,52 @@ export default function HalamanBeranda() {
   else if (data?.presensi) teksPresensi = `Sudah masuk pukul ${formatJam(data.presensi.jamMasuk)}`;
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-semibold">Halo, {pengguna.nama}</h1>
-        {data && <p className="text-redup tabular-nums">{formatTanggal(data.hariIni)}</p>}
-      </div>
+    <div className="space-y-8">
+      <KepalaHalaman
+        judul={`Halo, ${pengguna.nama}!`}
+        keterangan={data ? formatTanggal(data.hariIni) : "Ringkasan hari ini"}
+        ikon="rumah"
+      >
+        <Link href="/presensi" className="tombol-kunyit">
+          <Ikon nama="jam" />
+          Catat Masuk
+        </Link>
+        <Link href="/cuti/baru" className="tombol-kedua">
+          <Ikon nama="tambah" />
+          Ajukan Cuti
+        </Link>
+      </KepalaHalaman>
 
       {status === "memuat" && <Memuat />}
       {status === "gagal" && <Gagal onCobaLagi={cobaLagi} />}
       {status === "berhasil" && (
-        <div className="grid gap-4 sm:grid-cols-2">
-          <Link href="/presensi" className="rounded-lg bg-panel p-5 shadow-sm hover:ring-2 hover:ring-sedap/30">
-            <p className="text-sm text-redup">Presensi hari ini</p>
-            <p className="mt-1 text-lg font-semibold tabular-nums">{teksPresensi}</p>
+        <div className="grid gap-6 sm:grid-cols-2">
+          <Link href="/presensi" className="kartu group flex flex-col gap-4 p-6 transition hover:-translate-y-1">
+            <span className="grid h-12 w-12 place-items-center rounded-xl border-2 border-tinta bg-sedap text-white">
+              <Ikon nama="jam" className="h-6 w-6" />
+            </span>
+            <div>
+              <p className="text-sm font-extrabold tracking-wide text-sedap uppercase">Presensi hari ini</p>
+              <p className="mt-1 text-2xl font-black text-tinta tabular-nums">{teksPresensi}</p>
+            </div>
+            <span className="mt-auto text-sm font-bold text-redup group-hover:text-sedap">Buka Presensi Saya →</span>
           </Link>
-          <Link href="/cuti" className="rounded-lg bg-panel p-5 shadow-sm hover:ring-2 hover:ring-sedap/30">
-            <p className="text-sm text-redup">Cuti menunggu</p>
-            <p className="mt-1 text-lg font-semibold">{data.menunggu} pengajuan</p>
+
+          <Link href="/cuti" className="kartu group flex flex-col gap-4 bg-kunyit p-6 transition hover:-translate-y-1">
+            <span className="grid h-12 w-12 place-items-center rounded-xl border-2 border-tinta bg-white text-tinta">
+              <Ikon nama="kalender" className="h-6 w-6" />
+            </span>
+            <div>
+              <p className="text-sm font-extrabold tracking-wide text-tinta uppercase">Cuti menunggu</p>
+              <p className="mt-1 text-tinta">
+                <span className="text-5xl font-black tabular-nums">{data.menunggu}</span>
+                <span className="ml-2 text-lg font-bold">pengajuan</span>
+              </p>
+            </div>
+            <span className="mt-auto text-sm font-bold text-tinta/80 group-hover:text-tinta">Buka Cuti Saya →</span>
           </Link>
         </div>
       )}
-
-      <div className="flex flex-wrap gap-3">
-        <Link href="/presensi" className="rounded-md bg-sedap px-4 py-2 font-medium text-white hover:opacity-90">
-          Catat Masuk
-        </Link>
-        <Link href="/cuti/baru" className="rounded-md border border-sedap px-4 py-2 font-medium text-sedap hover:bg-sedap/5">
-          Ajukan Cuti
-        </Link>
-      </div>
     </div>
   );
 }

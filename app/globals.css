@@ -1,27 +1,93 @@
 @import "tailwindcss";
 
 /*
- * Warna dan font dari PRD Bab 5. Tailwind v4 membaca konfigurasinya di sini,
- * jadi kelas seperti bg-sedap, text-redup, atau bg-menunggu langsung bisa dipakai.
+ * Warna dan font dari PRD Bab 5, ditambah warna aksen dapur Sedap.
+ * Tailwind v4 membaca konfigurasinya di sini, jadi kelas seperti bg-sedap,
+ * text-redup, atau bg-kunyit langsung bisa dipakai.
  *
- * Colors and font from PRD chapter 5. Tailwind v4 reads its config here,
- * so classes like bg-sedap, text-redup, or bg-menunggu work right away.
+ * Colors and font from PRD chapter 5, plus Sedap kitchen accent colors.
+ * Tailwind v4 reads its config here, so classes like bg-sedap, text-redup,
+ * or bg-kunyit work right away.
  */
 @theme {
   --font-sans: var(--font-inter), system-ui, sans-serif;
 
+  /* PRD 5.1 */
   --color-sedap: #0f766e;
   --color-latar: #f4f7f9;
   --color-panel: #ffffff;
   --color-teks: #1f2937;
   --color-redup: #5a6b78;
 
+  /* PRD 5.2 */
   --color-menunggu: #f59e0b;
   --color-disetujui: #15a66a;
   --color-ditolak: #e53935;
+
+  /*
+   * Aksen: setiap modul punya warna sendiri supaya pengguna langsung tahu sedang di mana.
+   * tinta = garis dan menu, kunyit = penanda aktif dan modul cuti, terong = profil dan HRD.
+   *
+   * Accents: each module has its own color so users always know where they are.
+   * tinta = borders and menu, kunyit = active marker and leave module, terong = profile and HRD.
+   */
+  --color-tinta: #0b3f3b;
+  --color-kunyit: #ffc93c;
+  --color-terong: #7b2d63;
+  --color-krem: #fff6e0;
+
+  /* Bayangan keras tanpa blur, ciri tampilan ini / Hard, blur-free shadow that defines this look */
+  --shadow-keras: 4px 4px 0 0 var(--color-tinta);
+  --shadow-keras-kecil: 2px 2px 0 0 var(--color-tinta);
 }
 
 body {
   background: var(--color-latar);
   color: var(--color-teks);
+}
+
+/*
+ * Kelas bersama supaya halaman tidak mengulang deretan kelas yang sama.
+ * @utility dipakai karena Tailwind v4 hanya bisa @apply utilitas, bukan kelas biasa.
+ *
+ * Shared classes so pages don't repeat the same class lists.
+ * @utility is used because Tailwind v4 can only @apply utilities, not plain classes.
+ */
+@utility tombol {
+  @apply inline-flex items-center justify-center gap-2 rounded-xl border-2 border-tinta px-5 py-2.5 font-bold transition;
+  @apply hover:-translate-y-0.5 active:translate-y-0 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:translate-y-0;
+}
+@utility tombol-utama {
+  @apply tombol bg-sedap text-white shadow-keras;
+}
+@utility tombol-kunyit {
+  @apply tombol bg-kunyit text-tinta shadow-keras;
+}
+@utility tombol-kedua {
+  @apply tombol bg-panel text-tinta shadow-keras-kecil;
+}
+@utility kartu {
+  @apply rounded-2xl border-2 border-tinta bg-panel shadow-keras;
+}
+@utility isian {
+  @apply w-full rounded-xl border-2 border-tinta/25 bg-panel px-3 py-2.5 text-teks transition;
+  @apply focus:border-sedap focus:ring-4 focus:ring-sedap/20 focus:outline-none;
+}
+@utility label {
+  @apply mb-1.5 block text-sm font-bold text-tinta;
+}
+@utility galat {
+  @apply mt-1.5 text-sm font-semibold text-red-700;
+}
+
+@layer components {
+  .tabel {
+    @apply w-full text-left text-sm tabular-nums;
+  }
+  .tabel th {
+    @apply bg-krem px-4 py-3 text-xs font-extrabold tracking-wide text-tinta uppercase;
+  }
+  .tabel td {
+    @apply border-t-2 border-latar px-4 py-3;
+  }
 }

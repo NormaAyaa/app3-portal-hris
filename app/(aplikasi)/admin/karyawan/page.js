@@ -4,6 +4,8 @@ import { useState } from "react";
 import Link from "next/link";
 import { useAmbilData } from "@/lib/useAmbilData";
 import { ambilSemuaKaryawan } from "@/lib/data";
+import KepalaHalaman from "@/components/KepalaHalaman";
+import Ikon from "@/components/Ikon";
 import Memuat from "@/components/Memuat";
 import Kosong from "@/components/Kosong";
 import Gagal from "@/components/Gagal";
@@ -16,50 +18,74 @@ export default function HalamanDataKaryawan() {
   const tampil = data ? data.filter((k) => k.nama.toLowerCase().includes(cari.trim().toLowerCase())) : [];
 
   return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-semibold">Data Karyawan</h1>
+    <div className="space-y-8">
+      <KepalaHalaman judul="Data Karyawan" keterangan="Klik nama karyawan untuk melihat rincian dan mengubah perannya." warna="tinta" ikon="tim" />
 
-      <div className="rounded-lg bg-panel p-5 shadow-sm">
-        <label htmlFor="cari" className="sr-only">Cari nama</label>
-        <input
-          id="cari"
-          type="search"
-          placeholder="Cari nama..."
-          value={cari}
-          onChange={(e) => setCari(e.target.value)}
-          className="mb-4 w-full max-w-xs rounded-md border border-gray-300 px-3 py-2"
-        />
+      <section className="kartu overflow-hidden">
+        <div className="border-b-2 border-tinta p-5">
+          <label htmlFor="cari" className="sr-only">Cari nama</label>
+          <div className="relative max-w-sm">
+            <Ikon nama="cari" className="pointer-events-none absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-redup" />
+            <input
+              id="cari"
+              type="search"
+              placeholder="Cari nama karyawan"
+              value={cari}
+              onChange={(e) => setCari(e.target.value)}
+              className="isian pl-10"
+            />
+          </div>
+        </div>
 
         {status === "memuat" && <Memuat />}
-        {status === "gagal" && <Gagal onCobaLagi={cobaLagi} />}
+        {status === "gagal" && (
+          <div className="p-5">
+            <Gagal onCobaLagi={cobaLagi} />
+          </div>
+        )}
         {status === "berhasil" && tampil.length === 0 && (
-          <Kosong teks={cari ? `Tidak ada karyawan bernama "${cari}".` : "Belum ada karyawan terdaftar."} />
+          <div className="p-5">
+            <Kosong teks={cari ? `Tidak ada karyawan bernama "${cari}". Periksa ejaannya.` : "Belum ada karyawan terdaftar."} />
+          </div>
         )}
         {status === "berhasil" && tampil.length > 0 && (
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm">
-              <thead className="border-b border-gray-200 text-redup">
+            <table className="tabel">
+              <thead>
                 <tr>
-                  <th className="py-2 pr-4 font-medium">Nama</th>
-                  <th className="py-2 pr-4 font-medium">Email</th>
-                  <th className="py-2 font-medium">Peran</th>
+                  <th>Nama</th>
+                  <th>Email</th>
+                  <th>Peran</th>
                 </tr>
               </thead>
               <tbody>
                 {tampil.map((k) => (
-                  <tr key={k.id} className="border-b border-gray-100">
-                    <td className="py-2 pr-4">
-                      <Link href={`/admin/karyawan/${k.id}`} className="font-medium text-sedap hover:underline">{k.nama}</Link>
+                  <tr key={k.id} className="transition hover:bg-krem">
+                    <td>
+                      <Link href={`/admin/karyawan/${k.id}`} className="flex items-center gap-3 font-black text-tinta hover:text-sedap">
+                        <span className="grid h-9 w-9 place-items-center rounded-full border-2 border-tinta bg-krem text-sm">
+                          {k.nama.charAt(0)}
+                        </span>
+                        {k.nama}
+                      </Link>
                     </td>
-                    <td className="py-2 pr-4 text-redup">{k.email}</td>
-                    <td className="py-2">{k.role === "hrd" ? "HRD" : "Karyawan"}</td>
+                    <td className="font-medium text-redup">{k.email}</td>
+                    <td>
+                      <span
+                        className={`rounded-full border-2 border-tinta px-3 py-0.5 text-xs font-extrabold ${
+                          k.role === "hrd" ? "bg-terong text-white" : "bg-panel text-tinta"
+                        }`}
+                      >
+                        {k.role === "hrd" ? "HRD" : "Karyawan"}
+                      </span>
+                    </td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
         )}
-      </div>
+      </section>
     </div>
   );
 }

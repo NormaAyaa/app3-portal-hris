@@ -3,6 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import KepalaHalaman from "@/components/KepalaHalaman";
+import Ikon from "@/components/Ikon";
 
 const kosong = { tanggalMulai: "", tanggalSelesai: "", alasan: "" };
 
@@ -36,62 +38,39 @@ export default function HalamanAjukanCuti() {
   }
 
   return (
-    <div className="max-w-lg space-y-6">
-      <div>
-        <Link href="/cuti" className="text-sm text-sedap hover:underline">← Daftar Cuti</Link>
-        <h1 className="text-2xl font-semibold">Ajukan Cuti</h1>
-      </div>
+    <div className="max-w-2xl space-y-8">
+      <KepalaHalaman judul="Ajukan Cuti" keterangan="Isi tanggal dan alasan. HRD memutuskan pengajuanmu di halaman Persetujuan Cuti." warna="kunyit" ikon="tambah">
+        <Link href="/cuti" className="tombol-kedua">
+          <Ikon nama="kembali" />
+          Daftar Cuti
+        </Link>
+      </KepalaHalaman>
 
-      <form onSubmit={kirim} noValidate className="space-y-4 rounded-lg bg-panel p-5 shadow-sm">
-        <div className="grid gap-4 sm:grid-cols-2">
+      <form onSubmit={kirim} noValidate className="kartu space-y-5 p-6">
+        <div className="grid gap-5 sm:grid-cols-2">
           <div>
-            <label htmlFor="tanggalMulai" className="mb-1 block text-sm font-medium">Tanggal mulai</label>
-            <input
-              id="tanggalMulai"
-              name="tanggalMulai"
-              type="date"
-              value={isian.tanggalMulai}
-              onChange={ubah}
-              className="w-full rounded-md border border-gray-300 px-3 py-2 tabular-nums"
-            />
-            {galat.tanggalMulai && <p className="mt-1 text-sm text-ditolak">{galat.tanggalMulai}</p>}
+            <label htmlFor="tanggalMulai" className="label">Tanggal mulai</label>
+            <input id="tanggalMulai" name="tanggalMulai" type="date" value={isian.tanggalMulai} onChange={ubah} className="isian tabular-nums" />
+            {galat.tanggalMulai && <p className="galat">{galat.tanggalMulai}</p>}
           </div>
           <div>
-            <label htmlFor="tanggalSelesai" className="mb-1 block text-sm font-medium">Tanggal selesai</label>
-            <input
-              id="tanggalSelesai"
-              name="tanggalSelesai"
-              type="date"
-              value={isian.tanggalSelesai}
-              onChange={ubah}
-              className="w-full rounded-md border border-gray-300 px-3 py-2 tabular-nums"
-            />
-            {galat.tanggalSelesai && <p className="mt-1 text-sm text-ditolak">{galat.tanggalSelesai}</p>}
+            <label htmlFor="tanggalSelesai" className="label">Tanggal selesai</label>
+            <input id="tanggalSelesai" name="tanggalSelesai" type="date" value={isian.tanggalSelesai} onChange={ubah} className="isian tabular-nums" />
+            {galat.tanggalSelesai && <p className="galat">{galat.tanggalSelesai}</p>}
           </div>
         </div>
         <div>
-          <label htmlFor="alasan" className="mb-1 block text-sm font-medium">Alasan</label>
-          <textarea
-            id="alasan"
-            name="alasan"
-            rows={3}
-            value={isian.alasan}
-            onChange={ubah}
-            className="w-full rounded-md border border-gray-300 px-3 py-2"
-          />
-          {galat.alasan && <p className="mt-1 text-sm text-ditolak">{galat.alasan}</p>}
+          <label htmlFor="alasan" className="label">Alasan</label>
+          <textarea id="alasan" name="alasan" rows={4} value={isian.alasan} onChange={ubah} className="isian" />
+          {galat.alasan && <p className="galat">{galat.alasan}</p>}
         </div>
 
-        <button
-          type="submit"
-          disabled={tersimpan}
-          className="rounded-md bg-sedap px-4 py-2 font-medium text-white hover:opacity-90 disabled:opacity-50"
-        >
+        <button type="submit" disabled={tersimpan} className="tombol-utama px-8 py-3 text-lg">
           Kirim
         </button>
         {tersimpan && (
-          <p role="status" className="rounded-md bg-disetujui/15 p-3 text-sm font-medium text-disetujui">
-            Tersimpan (contoh)
+          <p role="status" className="rounded-xl border-2 border-disetujui bg-disetujui/15 p-3 font-bold text-tinta">
+            Tersimpan (contoh). Kembali ke Daftar Cuti...
           </p>
         )}
       </form>

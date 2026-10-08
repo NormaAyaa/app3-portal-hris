@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import KerangkaPublik from "@/components/KerangkaPublik";
 
 const PESAN_BELUM_DIPASANG = "Login belum dipasang. Dikerjakan di Sesi 6.";
 
@@ -39,70 +40,71 @@ export default function HalamanDaftar() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center p-4">
-      <div className="w-full max-w-sm rounded-lg bg-panel p-6 shadow-sm">
-        <p className="text-sm font-semibold text-sedap">Portal HRIS Sedap</p>
-        <h1 className="mb-6 text-2xl font-semibold">Daftar</h1>
-
-        <form onSubmit={kirim} noValidate className="space-y-4">
-          <div>
-            <label htmlFor="nama" className="mb-1 block text-sm font-medium">Nama</label>
-            <input
-              id="nama"
-              value={nama}
-              onChange={(e) => setNama(e.target.value)}
-              className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-sedap focus:outline-none"
-            />
-            {galat.nama && <p className="mt-1 text-sm text-ditolak">{galat.nama}</p>}
-          </div>
-          <div>
-            <label htmlFor="email" className="mb-1 block text-sm font-medium">Email</label>
-            <input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-sedap focus:outline-none"
-            />
-            {galat.email && <p className="mt-1 text-sm text-ditolak">{galat.email}</p>}
-          </div>
-          <div>
-            <label htmlFor="kataSandi" className="mb-1 block text-sm font-medium">Kata sandi</label>
-            <input
-              id="kataSandi"
-              type="password"
-              value={kataSandi}
-              onChange={(e) => setKataSandi(e.target.value)}
-              className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-sedap focus:outline-none"
-            />
-            {galat.kataSandi && <p className="mt-1 text-sm text-ditolak">{galat.kataSandi}</p>}
-          </div>
-          <button type="submit" className="w-full rounded-md bg-sedap py-2 font-medium text-white hover:opacity-90">
-            Daftar
-          </button>
-        </form>
-
-        <div className="my-4 flex items-center gap-3 text-sm text-redup">
-          <span className="h-px flex-1 bg-gray-200" />
-          atau
-          <span className="h-px flex-1 bg-gray-200" />
+    <KerangkaPublik judul="Daftar">
+      <form onSubmit={kirim} noValidate className="space-y-4">
+        <div>
+          <label htmlFor="nama" className="label">Nama</label>
+          <input
+            id="nama"
+            autoComplete="name"
+            value={nama}
+            onChange={(e) => setNama(e.target.value)}
+            className="isian"
+          />
+          {galat.nama && <p className="galat">{galat.nama}</p>}
         </div>
-
-        <button
-          type="button"
-          onClick={masukGoogle}
-          className="w-full rounded-md border border-gray-300 py-2 font-medium hover:bg-latar"
-        >
-          Masuk dengan Google
+        <div>
+          <label htmlFor="email" className="label">Email</label>
+          <input
+            id="email"
+            type="email"
+            autoComplete="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="isian"
+          />
+          {galat.email && <p className="galat">{galat.email}</p>}
+        </div>
+        <div>
+          <label htmlFor="kataSandi" className="label">Kata sandi</label>
+          <input
+            id="kataSandi"
+            type="password"
+            autoComplete="new-password"
+            value={kataSandi}
+            onChange={(e) => setKataSandi(e.target.value)}
+            className="isian"
+          />
+          {galat.kataSandi && <p className="galat">{galat.kataSandi}</p>}
+        </div>
+        <button type="submit" className="tombol-utama w-full py-3 text-lg">
+          Daftar
         </button>
+      </form>
 
-        {pesan && <p role="status" className="mt-4 rounded-md bg-menunggu/15 p-3 text-sm text-amber-800">{pesan}</p>}
-
-        <p className="mt-6 text-center text-sm text-redup">
-          Sudah punya akun?{" "}
-          <Link href="/masuk" className="font-medium text-sedap hover:underline">Masuk</Link>
-        </p>
+      <div className="my-5 flex items-center gap-3 text-sm font-bold text-redup">
+        <span className="h-0.5 flex-1 bg-tinta/15" />
+        atau
+        <span className="h-0.5 flex-1 bg-tinta/15" />
       </div>
-    </main>
+
+      <button type="button" onClick={masukGoogle} className="tombol-kedua w-full py-3">
+        <span className="grid h-6 w-6 place-items-center rounded-full bg-kunyit text-sm font-black text-tinta">G</span>
+        Masuk dengan Google
+      </button>
+
+      {pesan && (
+        <p role="status" className="mt-5 rounded-xl border-2 border-menunggu bg-menunggu/15 p-3 text-sm font-bold text-tinta">
+          {pesan}
+        </p>
+      )}
+
+      <p className="mt-6 text-center text-sm font-medium text-redup">
+        Sudah punya akun?{" "}
+        <Link href="/masuk" className="font-extrabold text-sedap underline decoration-kunyit decoration-4 underline-offset-4">
+          Masuk
+        </Link>
+      </p>
+    </KerangkaPublik>
   );
 }

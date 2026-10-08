@@ -3,23 +3,28 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { usePengguna } from "@/lib/pengguna";
+import Ikon from "./Ikon";
 
 // Menu HRD hanya untuk role "hrd" (PRD 3.1) / HRD menu is only for the "hrd" role (PRD 3.1)
 const menuHrd = [
-  { href: "/admin", label: "Dasbor HRD" },
-  { href: "/admin/karyawan", label: "Data Karyawan" },
-  { href: "/admin/cuti", label: "Persetujuan Cuti" },
-  { href: "/admin/laporan", label: "Laporan" },
+  { href: "/admin", label: "Dasbor HRD", ikon: "dasbor" },
+  { href: "/admin/karyawan", label: "Data Karyawan", ikon: "tim" },
+  { href: "/admin/cuti", label: "Persetujuan Cuti", ikon: "centang" },
+  { href: "/admin/laporan", label: "Laporan", ikon: "grafik" },
 ];
 
-function TautanMenu({ href, label, aktif }) {
+function TautanMenu({ href, label, ikon, aktif }) {
   return (
     <Link
       href={href}
-      className={`block rounded-md px-3 py-2 text-sm ${
-        aktif ? "bg-sedap font-medium text-white" : "text-teks hover:bg-latar"
+      aria-current={aktif ? "page" : undefined}
+      className={`flex shrink-0 items-center gap-3 rounded-xl border-2 px-3 py-2.5 text-sm font-bold transition ${
+        aktif
+          ? "border-tinta bg-kunyit text-tinta shadow-keras-kecil"
+          : "border-transparent text-white/85 hover:bg-white/10 hover:text-white"
       }`}
     >
+      <Ikon nama={ikon} />
       {label}
     </Link>
   );
@@ -38,29 +43,33 @@ export default function MenuSamping() {
   const diAjukanCuti = aktif("/cuti/baru", true);
 
   return (
-    <nav className="space-y-1 p-3">
-      <TautanMenu href="/beranda" label="Beranda" aktif={aktif("/beranda")} />
-      <TautanMenu href="/presensi" label="Presensi Saya" aktif={aktif("/presensi")} />
+    // Di layar kecil menu menjadi satu baris yang bisa digeser / On small screens the menu becomes one scrollable row
+    <nav className="flex gap-1 overflow-x-auto p-3 md:flex-col md:overflow-visible md:p-4">
+      <TautanMenu href="/beranda" label="Beranda" ikon="rumah" aktif={aktif("/beranda")} />
+      <TautanMenu href="/presensi" label="Presensi Saya" ikon="jam" aktif={aktif("/presensi")} />
 
       {/* <details> = menu buka-tutup bawaan peramban / <details> = the browser's built-in collapsible menu */}
-      <details open={diCuti} className="group">
-        <summary className="flex cursor-pointer list-none items-center justify-between rounded-md px-3 py-2 text-sm text-teks hover:bg-latar">
+      <details open={diCuti} className="group shrink-0">
+        <summary className="flex cursor-pointer list-none items-center gap-3 rounded-xl border-2 border-transparent px-3 py-2.5 text-sm font-bold text-white/85 hover:bg-white/10 hover:text-white">
+          <Ikon nama="kalender" />
           Cuti Saya
-          <span className="text-redup transition group-open:rotate-180">▾</span>
+          <Ikon nama="bawah" className="ml-auto h-4 w-4 transition group-open:rotate-180" />
         </summary>
-        <div className="mt-1 space-y-1 pl-3">
-          <TautanMenu href="/cuti" label="Daftar Cuti" aktif={diCuti && !diAjukanCuti} />
-          <TautanMenu href="/cuti/baru" label="Ajukan Cuti" aktif={diAjukanCuti} />
+        <div className="mt-1 flex gap-1 md:ml-4 md:flex-col md:border-l-2 md:border-white/20 md:pl-2">
+          <TautanMenu href="/cuti" label="Daftar Cuti" ikon="daftar" aktif={diCuti && !diAjukanCuti} />
+          <TautanMenu href="/cuti/baru" label="Ajukan Cuti" ikon="tambah" aktif={diAjukanCuti} />
         </div>
       </details>
 
-      <TautanMenu href="/profil" label="Profil" aktif={aktif("/profil")} />
+      <TautanMenu href="/profil" label="Profil" ikon="orang" aktif={aktif("/profil")} />
 
       {pengguna?.role === "hrd" && (
         <>
-          <p className="px-3 pt-4 pb-1 text-xs font-semibold uppercase tracking-wide text-redup">HRD</p>
+          <p className="hidden px-3 pt-6 pb-2 text-xs font-extrabold tracking-wider text-kunyit uppercase md:block">
+            Menu HRD
+          </p>
           {menuHrd.map((m) => (
-            <TautanMenu key={m.href} href={m.href} label={m.label} aktif={aktif(m.href, m.href === "/admin")} />
+            <TautanMenu key={m.href} {...m} aktif={aktif(m.href, m.href === "/admin")} />
           ))}
         </>
       )}

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { usePengguna } from "@/lib/pengguna";
+import KepalaHalaman from "@/components/KepalaHalaman";
 
 // Profil (PRD 4.5). Nama bisa diubah di tampilan, belum disimpan / Profile (PRD 4.5). Name is editable on screen, not saved yet
 export default function HalamanProfil() {
@@ -15,36 +16,45 @@ export default function HalamanProfil() {
   }
 
   return (
-    <div className="max-w-lg space-y-6">
-      <h1 className="text-2xl font-semibold">Profil</h1>
+    <div className="max-w-2xl space-y-8">
+      <KepalaHalaman judul="Profil" keterangan="Nama bisa kamu ubah. Email dan peran diatur oleh HRD." warna="terong" ikon="orang" />
 
-      <form onSubmit={simpan} className="space-y-4 rounded-lg bg-panel p-5 shadow-sm">
-        <div>
-          <label htmlFor="nama" className="mb-1 block text-sm font-medium">Nama</label>
-          <input
-            id="nama"
-            value={nama}
-            onChange={(e) => setNama(e.target.value)}
-            className="w-full rounded-md border border-gray-300 px-3 py-2"
-          />
+      <form onSubmit={simpan} className="kartu overflow-hidden">
+        <div className="flex items-center gap-4 border-b-2 border-tinta bg-krem p-6">
+          <span className="grid h-16 w-16 place-items-center rounded-2xl border-2 border-tinta bg-terong text-3xl font-black text-white shadow-keras-kecil">
+            {(nama.trim() || pengguna.nama).charAt(0)}
+          </span>
+          <div>
+            <p className="text-xl font-black text-tinta">{nama.trim() || pengguna.nama}</p>
+            <span className="mt-1 inline-block rounded-full border-2 border-tinta bg-kunyit px-3 py-0.5 text-xs font-extrabold text-tinta">
+              {pengguna.role === "hrd" ? "HRD" : "Karyawan"}
+            </span>
+          </div>
         </div>
-        <div>
-          <label htmlFor="email" className="mb-1 block text-sm font-medium">Email</label>
-          <input id="email" value={pengguna.email} readOnly className="w-full rounded-md border border-gray-200 bg-latar px-3 py-2 text-redup" />
+
+        <div className="space-y-5 p-6">
+          <div>
+            <label htmlFor="nama" className="label">Nama</label>
+            <input id="nama" autoComplete="name" value={nama} onChange={(e) => setNama(e.target.value)} className="isian" />
+          </div>
+          <div>
+            <label htmlFor="email" className="label">Email</label>
+            <input id="email" value={pengguna.email} readOnly className="isian cursor-not-allowed bg-latar text-redup" />
+          </div>
+          <div>
+            <label htmlFor="peran" className="label">Peran</label>
+            <input
+              id="peran"
+              value={pengguna.role === "hrd" ? "HRD" : "Karyawan"}
+              readOnly
+              className="isian cursor-not-allowed bg-latar text-redup"
+            />
+          </div>
+          <div className="flex flex-wrap items-center gap-4">
+            <button type="submit" className="tombol-utama px-8">Simpan</button>
+            {pesan && <p role="status" className="font-bold text-tinta">{pesan}</p>}
+          </div>
         </div>
-        <div>
-          <label htmlFor="peran" className="mb-1 block text-sm font-medium">Peran</label>
-          <input
-            id="peran"
-            value={pengguna.role === "hrd" ? "HRD" : "Karyawan"}
-            readOnly
-            className="w-full rounded-md border border-gray-200 bg-latar px-3 py-2 text-redup"
-          />
-        </div>
-        <button type="submit" className="rounded-md bg-sedap px-4 py-2 font-medium text-white hover:opacity-90">
-          Simpan
-        </button>
-        {pesan && <p role="status" className="text-sm text-redup">{pesan}</p>}
       </form>
     </div>
   );

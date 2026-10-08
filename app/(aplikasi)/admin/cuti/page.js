@@ -6,6 +6,8 @@ import { useSearchParams } from "next/navigation";
 import { useAmbilData } from "@/lib/useAmbilData";
 import { ambilSemuaPengajuan } from "@/lib/data";
 import { formatTanggal, lamaHari } from "@/lib/waktu";
+import KepalaHalaman from "@/components/KepalaHalaman";
+import Ikon from "@/components/Ikon";
 import Memuat from "@/components/Memuat";
 import Kosong from "@/components/Kosong";
 import Gagal from "@/components/Gagal";
@@ -42,93 +44,96 @@ export default function HalamanPersetujuanCuti() {
     .filter((c) => status === "semua" || c.status === status);
 
   return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-semibold">Persetujuan Cuti</h1>
+    <div className="space-y-8">
+      <KepalaHalaman judul="Persetujuan Cuti" keterangan="Baca alasannya, tulis catatan bila perlu, lalu pilih Setujui atau Tolak." warna="tinta" ikon="centang" />
 
-      <div className="rounded-lg bg-panel p-5 shadow-sm">
-        <div className="mb-4 flex flex-wrap gap-2">
-          {saringan.map((s) => (
-            <Link
-              key={s.nilai}
-              href={s.nilai === "semua" ? "/admin/cuti" : `/admin/cuti?status=${s.nilai}`}
-              className={`rounded-full px-4 py-1 text-sm ${
-                status === s.nilai ? "bg-sedap font-medium text-white" : "bg-latar text-teks hover:bg-gray-200"
-              }`}
-            >
-              {s.label}
-            </Link>
+      {/* Saringan berupa tautan supaya tersimpan di alamat / Filters are links so they live in the URL */}
+      <nav aria-label="Saringan status" className="flex flex-wrap gap-3">
+        {saringan.map((s) => (
+          <Link
+            key={s.nilai}
+            href={s.nilai === "semua" ? "/admin/cuti" : `/admin/cuti?status=${s.nilai}`}
+            aria-current={status === s.nilai ? "page" : undefined}
+            className={`rounded-full border-2 border-tinta px-5 py-2 text-sm font-extrabold transition ${
+              status === s.nilai ? "bg-kunyit text-tinta shadow-keras-kecil" : "bg-panel text-tinta hover:bg-krem"
+            }`}
+          >
+            {s.label}
+          </Link>
+        ))}
+      </nav>
+
+      {pesan && (
+        <p role="status" className="rounded-xl border-2 border-tinta bg-krem p-4 font-bold text-tinta">
+          {pesan}
+        </p>
+      )}
+
+      {keadaan === "memuat" && <Memuat />}
+      {keadaan === "gagal" && <Gagal onCobaLagi={cobaLagi} />}
+      {keadaan === "berhasil" && tampil.length === 0 && (
+        <Kosong teks={status === "menunggu" ? "Semua pengajuan sudah diputuskan." : "Tidak ada pengajuan dengan status ini."} />
+      )}
+      {keadaan === "berhasil" && tampil.length > 0 && (
+        // Satu kartu per pengajuan supaya semua yang dibutuhkan untuk memutuskan ada di satu tempat / One card per request so everything needed to decide sits together
+        <ul className="space-y-5">
+          {tampil.map((c) => (
+            <li key={c.id} className="kartu overflow-hidden">
+              <div className="flex flex-wrap items-center justify-between gap-3 border-b-2 border-tinta bg-krem px-5 py-3">
+                <div className="flex items-center gap-3">
+                  <span className="grid h-10 w-10 place-items-center rounded-full border-2 border-tinta bg-panel font-black text-tinta">
+                    {c.nama.charAt(0)}
+                  </span>
+                  <div>
+                    <p className="text-lg font-black text-tinta">{c.nama}</p>
+                    <p className="text-xs font-bold text-redup">{c.id}</p>
+                  </div>
+                </div>
+                <PilStatus status={c.status} />
+              </div>
+
+              <div className="grid gap-5 p-5 md:grid-cols-[1fr_1fr]">
+                <div className="space-y-3">
+                  <p className="font-black text-tinta tabular-nums">
+                    {formatTanggal(c.tanggalMulai)} – {formatTanggal(c.tanggalSelesai)}
+                    <span className="ml-2 rounded-lg bg-sedap px-2 py-0.5 text-sm text-white">{lamaHari(c.tanggalMulai, c.tanggalSelesai)} hari</span>
+                  </p>
+                  <p className="font-medium">{c.alasan}</p>
+                </div>
+
+                <div>
+                  {c.status === "menunggu" ? (
+                    <>
+                      <label htmlFor={`catatan-${c.id}`} className="label">Catatan HRD</label>
+                      <textarea
+                        id={`catatan-${c.id}`}
+                        rows={2}
+                        value={c.catatanHrd}
+                        onChange={(e) => setCatatan({ ...catatan, [c.id]: e.target.value })}
+                        className="isian"
+                      />
+                      <div className="mt-3 flex flex-wrap gap-3">
+                        <button type="button" onClick={() => putuskan(c, "disetujui")} className="tombol-utama">
+                          <Ikon nama="centang" />
+                          Setujui
+                        </button>
+                        <button type="button" onClick={() => putuskan(c, "ditolak")} className="tombol bg-panel text-red-700 shadow-keras-kecil">
+                          Tolak
+                        </button>
+                      </div>
+                    </>
+                  ) : (
+                    <div className="rounded-xl border-2 border-dashed border-tinta/30 p-4">
+                      <p className="text-xs font-extrabold tracking-wide text-terong uppercase">Catatan HRD</p>
+                      <p className="mt-1 font-semibold">{c.catatanHrd || <span className="text-redup">Tanpa catatan.</span>}</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </li>
           ))}
-        </div>
-
-        {pesan && <p role="status" className="mb-4 rounded-md bg-latar p-3 text-sm">{pesan}</p>}
-
-        {keadaan === "memuat" && <Memuat />}
-        {keadaan === "gagal" && <Gagal onCobaLagi={cobaLagi} />}
-        {keadaan === "berhasil" && tampil.length === 0 && <Kosong teks="Tidak ada pengajuan dengan status ini." />}
-        {keadaan === "berhasil" && tampil.length > 0 && (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm tabular-nums">
-              <thead className="border-b border-gray-200 text-redup">
-                <tr>
-                  <th className="py-2 pr-4 font-medium">Nama</th>
-                  <th className="py-2 pr-4 font-medium">Tanggal</th>
-                  <th className="py-2 pr-4 font-medium">Lama</th>
-                  <th className="py-2 pr-4 font-medium">Alasan</th>
-                  <th className="py-2 pr-4 font-medium">Status</th>
-                  <th className="py-2 pr-4 font-medium">Catatan HRD</th>
-                  <th className="py-2 font-medium">Aksi</th>
-                </tr>
-              </thead>
-              <tbody>
-                {tampil.map((c) => (
-                  <tr key={c.id} className="border-b border-gray-100 align-top">
-                    <td className="py-2 pr-4 font-medium">{c.nama}</td>
-                    <td className="py-2 pr-4 whitespace-nowrap">
-                      {formatTanggal(c.tanggalMulai)} – {formatTanggal(c.tanggalSelesai)}
-                    </td>
-                    <td className="py-2 pr-4 whitespace-nowrap">{lamaHari(c.tanggalMulai, c.tanggalSelesai)} hari</td>
-                    <td className="py-2 pr-4">{c.alasan}</td>
-                    <td className="py-2 pr-4"><PilStatus status={c.status} /></td>
-                    <td className="py-2 pr-4">
-                      {c.status === "menunggu" ? (
-                        <textarea
-                          aria-label={`Catatan HRD untuk ${c.id}`}
-                          rows={2}
-                          value={c.catatanHrd}
-                          onChange={(e) => setCatatan({ ...catatan, [c.id]: e.target.value })}
-                          className="w-48 rounded-md border border-gray-300 px-2 py-1"
-                        />
-                      ) : (
-                        c.catatanHrd || <span className="text-redup">—</span>
-                      )}
-                    </td>
-                    <td className="py-2">
-                      {c.status === "menunggu" && (
-                        <div className="flex gap-2">
-                          <button
-                            type="button"
-                            onClick={() => putuskan(c, "disetujui")}
-                            className="rounded-md bg-disetujui px-3 py-1 text-white hover:opacity-90"
-                          >
-                            Setujui
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => putuskan(c, "ditolak")}
-                            className="rounded-md bg-ditolak px-3 py-1 text-white hover:opacity-90"
-                          >
-                            Tolak
-                          </button>
-                        </div>
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </div>
+        </ul>
+      )}
     </div>
   );
 }

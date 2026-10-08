@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Ikon from "./Ikon";
 
 /**
  * Belum dipakai di halaman mana pun. Peserta memakainya untuk route guard di Sesi 6.
@@ -12,12 +13,15 @@ export default function AksesDitolak({
   kembaliKe = "/beranda",
 }) {
   return (
-    <div className="mx-auto max-w-md rounded-lg bg-panel p-8 text-center shadow-sm">
-      <h1 className="mb-2 text-xl font-semibold">Akses Ditolak</h1>
-      <p className="mb-6 text-redup">{alasan}</p>
-      <Link href={kembaliKe} className="inline-block rounded-md bg-sedap px-4 py-2 text-sm font-medium text-white hover:opacity-90">
-        Kembali ke Beranda
-      </Link>
+    <div className="kartu mx-auto max-w-md overflow-hidden text-center">
+      <h1 className="bg-ditolak py-8 text-4xl font-black text-white">Akses Ditolak</h1>
+      <div className="p-8">
+        <p className="mb-6 font-medium text-teks">{alasan}</p>
+        <Link href={kembaliKe} className="tombol-utama">
+          <Ikon nama="kembali" />
+          Kembali ke Beranda
+        </Link>
+      </div>
     </div>
   );
 }

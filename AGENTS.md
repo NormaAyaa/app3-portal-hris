@@ -18,7 +18,18 @@ Repo ini codebase starter. Semua halaman sudah tampil dengan data contoh. Login,
 
 `cacheComponents` aktif di `next.config.mjs`. Komponen yang membaca alamat lewat `usePathname`, `useSearchParams`, atau `useParams` wajib berada di dalam `<Suspense>`. Layout `app/(aplikasi)/layout.js` sudah membungkus menu dan isi halaman. Komponen baru yang membaca alamat di luar layout itu perlu dibungkus sendiri.
 
-Warna PRD Bab 5 tersedia sebagai kelas Tailwind dengan nama `sedap`, `latar`, `panel`, `teks`, `redup`, `menunggu`, `disetujui`, dan `ditolak`, misalnya `bg-sedap` atau `text-redup`. Definisinya ada di `app/globals.css`.
+Warna PRD Bab 5 tersedia sebagai kelas Tailwind dengan nama `sedap`, `latar`, `panel`, `teks`, `redup`, `menunggu`, `disetujui`, dan `ditolak`, misalnya `bg-sedap` atau `text-redup`. Empat warna aksen ditambahkan: `tinta` untuk garis dan menu, `kunyit` untuk penanda aktif dan modul cuti, `terong` untuk profil, dan `krem` untuk latar sorotan. Definisinya ada di `app/globals.css`.
+
+Tampilan memakai garis tebal `border-2 border-tinta` dan bayangan keras `shadow-keras`. Pakai kelas bersama dari `app/globals.css` supaya halaman baru seragam:
+
+| Kelas | Dipakai untuk |
+|---|---|
+| `tombol-utama`, `tombol-kunyit`, `tombol-kedua` | Tombol utama, tombol sorotan, dan tombol pendamping |
+| `kartu` | Panel isi halaman |
+| `isian`, `label`, `galat` | Kolom formulir, labelnya, dan pesan galatnya |
+| `tabel` | Tabel data |
+
+Setiap halaman di dalam `(aplikasi)` dibuka dengan komponen `KepalaHalaman`. Warnanya mengikuti modul: `sedap` untuk Beranda dan Presensi, `kunyit` untuk Cuti, `terong` untuk Profil, dan `tinta` untuk halaman HRD.
 
 ## Struktur Folder
 
@@ -36,6 +47,9 @@ app/
     └── admin/                Dasbor HRD, karyawan, karyawan/[id], cuti, laporan
 components/
 ├── BilahAtas.js  MenuSamping.js
+├── KepalaHalaman.js          pita judul berwarna setiap halaman
+├── KerangkaPublik.js         bingkai halaman Masuk dan Daftar
+├── Ikon.js                   ikon garis tanpa paket tambahan
 ├── Memuat.js  Kosong.js  Gagal.js
 ├── AksesDitolak.js           belum dipakai
 └── PilStatus.js

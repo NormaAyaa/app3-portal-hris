@@ -3,7 +3,8 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAmbilData } from "@/lib/useAmbilData";
 import { ambilRekapBulanan } from "@/lib/data";
-import { bulanIni } from "@/lib/waktu";
+import { bulanIni, formatBulan } from "@/lib/waktu";
+import KepalaHalaman from "@/components/KepalaHalaman";
 import Memuat from "@/components/Memuat";
 import Kosong from "@/components/Kosong";
 import Gagal from "@/components/Gagal";
@@ -18,49 +19,71 @@ export default function HalamanLaporan() {
 
   const { status, data, cobaLagi } = useAmbilData(() => ambilRekapBulanan(bulan), [bulan]);
 
-  return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-semibold">Laporan</h1>
+  // Hari hadir terbanyak jadi patokan panjang batang / The highest attendance sets the full bar length
+  const terbanyak = data ? Math.max(1, ...data.map((r) => r.hariHadir)) : 1;
 
-      <div className="rounded-lg bg-panel p-5 shadow-sm">
-        <label className="mb-4 block text-sm font-medium">
+  return (
+    <div className="space-y-8">
+      <KepalaHalaman judul="Laporan" keterangan={`Rekap kehadiran ${formatBulan(bulan)}. Ganti bulan untuk melihat rekap lain.`} warna="tinta" ikon="grafik">
+        <label className="flex items-center gap-3 rounded-xl border-2 border-tinta bg-panel px-3 py-1.5 font-bold text-tinta">
           Bulan
           <input
             type="month"
             value={bulan}
             onChange={(e) => e.target.value && router.replace(`/admin/laporan?bulan=${e.target.value}`)}
-            className="ml-2 rounded-md border border-gray-300 px-2 py-1"
+            className="rounded-lg border-2 border-tinta/25 px-2 py-1"
           />
         </label>
+      </KepalaHalaman>
 
+      <section className="kartu overflow-hidden">
         {status === "memuat" && <Memuat />}
-        {status === "gagal" && <Gagal onCobaLagi={cobaLagi} />}
-        {status === "berhasil" && data.length === 0 && <Kosong teks="Belum ada karyawan terdaftar." />}
+        {status === "gagal" && (
+          <div className="p-5">
+            <Gagal onCobaLagi={cobaLagi} />
+          </div>
+        )}
+        {status === "berhasil" && data.length === 0 && (
+          <div className="p-5">
+            <Kosong teks="Belum ada karyawan terdaftar." />
+          </div>
+        )}
         {status === "berhasil" && data.length > 0 && (
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm tabular-nums">
-              <thead className="border-b border-gray-200 text-redup">
+            <table className="tabel">
+              <thead>
                 <tr>
-                  <th className="py-2 pr-4 font-medium">Nama</th>
-                  <th className="py-2 pr-4 text-right font-medium">Hari Hadir</th>
-                  <th className="py-2 pr-4 text-right font-medium">Terlambat</th>
-                  <th className="py-2 text-right font-medium">Cuti Disetujui</th>
+                  <th>Nama</th>
+                  <th className="w-2/5">Hari Hadir</th>
+                  <th className="text-right">Terlambat</th>
+                  <th className="text-right">Cuti Disetujui</th>
                 </tr>
               </thead>
               <tbody>
                 {data.map((r) => (
-                  <tr key={r.karyawanId} className="border-b border-gray-100">
-                    <td className="py-2 pr-4 font-medium">{r.nama}</td>
-                    <td className="py-2 pr-4 text-right">{r.hariHadir}</td>
-                    <td className="py-2 pr-4 text-right">{r.terlambat}</td>
-                    <td className="py-2 text-right">{r.cutiDisetujui} hari</td>
+                  <tr key={r.karyawanId} className="transition hover:bg-krem">
+                    <td className="font-black text-tinta">{r.nama}</td>
+                    <td>
+                      <div className="flex items-center gap-3">
+                        <span className="w-6 text-right font-black">{r.hariHadir}</span>
+                        <span className="h-3 flex-1 overflow-hidden rounded-full bg-latar">
+                          <span className="block h-full rounded-full bg-sedap" style={{ width: `${(r.hariHadir / terbanyak) * 100}%` }} />
+                        </span>
+                      </div>
+                    </td>
+                    <td className={`text-right font-black ${r.terlambat > 0 ? "text-red-700" : "text-redup"}`}>{r.terlambat}</td>
+                    <td className="text-right">
+                      <span className={r.cutiDisetujui > 0 ? "rounded-lg bg-kunyit px-2 py-0.5 font-black text-tinta" : "font-bold text-redup"}>
+                        {r.cutiDisetujui} hari
+                      </span>
+                    </td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
         )}
-      </div>
+      </section>
     </div>
   );
 }

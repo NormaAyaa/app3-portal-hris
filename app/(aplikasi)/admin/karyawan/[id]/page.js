@@ -5,6 +5,8 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useAmbilData } from "@/lib/useAmbilData";
 import { ambilKaryawan } from "@/lib/data";
+import KepalaHalaman from "@/components/KepalaHalaman";
+import Ikon from "@/components/Ikon";
 import Memuat from "@/components/Memuat";
 import Kosong from "@/components/Kosong";
 import Gagal from "@/components/Gagal";
@@ -15,20 +17,31 @@ export default function HalamanRincianKaryawan() {
   const { status, data: k, cobaLagi } = useAmbilData(() => ambilKaryawan(id), [id]);
 
   return (
-    <div className="max-w-lg space-y-6">
-      <div>
-        <Link href="/admin/karyawan" className="text-sm text-sedap hover:underline">← Data Karyawan</Link>
-        <h1 className="text-2xl font-semibold">Rincian Karyawan</h1>
-      </div>
+    <div className="max-w-2xl space-y-8">
+      <KepalaHalaman judul={k ? k.nama : "Rincian Karyawan"} keterangan={k?.email} warna="tinta" ikon="orang">
+        <Link href="/admin/karyawan" className="tombol-kedua">
+          <Ikon nama="kembali" />
+          Data Karyawan
+        </Link>
+      </KepalaHalaman>
 
       {status === "memuat" && <Memuat />}
       {status === "gagal" && <Gagal onCobaLagi={cobaLagi} />}
-      {status === "berhasil" && k === null && <Kosong teks="Karyawan tidak ditemukan" />}
+      {status === "berhasil" && k === null && (
+        <Kosong teks="Karyawan tidak ditemukan">
+          <Link href="/admin/karyawan" className="tombol-utama">Lihat Data Karyawan</Link>
+        </Kosong>
+      )}
       {/* key={k.id} mengosongkan isian saat pindah ke karyawan lain / key={k.id} resets the form when switching employees */}
       {status === "berhasil" && k && <FormPeran key={k.id} karyawan={k} />}
     </div>
   );
 }
+
+const pilihanPeran = [
+  { nilai: "karyawan", label: "Karyawan", keterangan: "Mencatat presensi dan mengajukan cuti miliknya." },
+  { nilai: "hrd", label: "HRD", keterangan: "Ditambah mengelola karyawan, memutuskan cuti, dan membaca laporan." },
+];
 
 // Simpan hanya mengubah tampilan, belum menulis ke Firestore / Save only changes the screen, nothing is written to Firestore
 function FormPeran({ karyawan }) {
@@ -41,32 +54,39 @@ function FormPeran({ karyawan }) {
   }
 
   return (
-    <form onSubmit={simpan} className="space-y-4 rounded-lg bg-panel p-5 shadow-sm">
-      <dl className="grid grid-cols-[auto_1fr] gap-x-6 gap-y-3 text-sm">
-        <dt className="text-redup">Nama</dt>
-        <dd className="font-medium">{karyawan.nama}</dd>
-        <dt className="text-redup">Email</dt>
-        <dd>{karyawan.email}</dd>
-      </dl>
-      <div>
-        <label htmlFor="peran" className="mb-1 block text-sm font-medium">Peran</label>
-        <select
-          id="peran"
-          value={peran}
-          onChange={(e) => {
-            setPeran(e.target.value);
-            setPesan("");
-          }}
-          className="rounded-md border border-gray-300 px-3 py-2"
-        >
-          <option value="karyawan">Karyawan</option>
-          <option value="hrd">HRD</option>
-        </select>
+    <form onSubmit={simpan} className="kartu space-y-5 p-6">
+      {/* Pilihan peran berupa kartu radio supaya akibat tiap peran terbaca / Role options as radio cards so each role's effect is readable */}
+      <fieldset>
+        <legend className="label">Peran</legend>
+        <div className="grid gap-3 sm:grid-cols-2">
+          {pilihanPeran.map((p) => (
+            <label
+              key={p.nilai}
+              className={`cursor-pointer rounded-xl border-2 p-4 transition has-[:focus-visible]:ring-4 has-[:focus-visible]:ring-sedap/40 ${
+                peran === p.nilai ? "border-tinta bg-kunyit shadow-keras-kecil" : "border-tinta/25 hover:border-tinta"
+              }`}
+            >
+              <input
+                type="radio"
+                name="peran"
+                value={p.nilai}
+                checked={peran === p.nilai}
+                onChange={(e) => {
+                  setPeran(e.target.value);
+                  setPesan("");
+                }}
+                className="sr-only"
+              />
+              <span className="block text-lg font-black text-tinta">{p.label}</span>
+              <span className="mt-1 block text-sm font-medium text-tinta/80">{p.keterangan}</span>
+            </label>
+          ))}
+        </div>
+      </fieldset>
+      <div className="flex flex-wrap items-center gap-4">
+        <button type="submit" className="tombol-utama px-8">Simpan</button>
+        {pesan && <p role="status" className="font-bold text-tinta">{pesan}</p>}
       </div>
-      <button type="submit" className="rounded-md bg-sedap px-4 py-2 font-medium text-white hover:opacity-90">
-        Simpan
-      </button>
-      {pesan && <p role="status" className="text-sm text-redup">{pesan}</p>}
     </form>
   );
 }

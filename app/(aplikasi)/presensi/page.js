@@ -6,6 +6,8 @@ import { usePengguna } from "@/lib/pengguna";
 import { useAmbilData } from "@/lib/useAmbilData";
 import { ambilPresensi } from "@/lib/data";
 import { bulanIni, formatBulan, formatJam, formatTanggal, terlambat } from "@/lib/waktu";
+import KepalaHalaman from "@/components/KepalaHalaman";
+import Ikon from "@/components/Ikon";
 import Memuat from "@/components/Memuat";
 import Kosong from "@/components/Kosong";
 import Gagal from "@/components/Gagal";
@@ -29,85 +31,101 @@ export default function HalamanPresensi() {
   const jumlahTerlambat = data ? data.filter((p) => terlambat(p.jamMasuk)).length : 0;
 
   return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-semibold">Presensi Saya</h1>
+    <div className="space-y-8">
+      <KepalaHalaman judul="Presensi Saya" keterangan="Catat jam masuk saat tiba dan jam pulang sebelum meninggalkan dapur." ikon="jam" />
 
-      <div className="rounded-lg bg-panel p-5 shadow-sm">
+      <section className="kartu grid gap-6 p-6 md:grid-cols-[1fr_auto] md:items-center">
+        <div>
+          <p className="text-sm font-extrabold tracking-wide text-sedap uppercase">Hari ini</p>
+          <p className="mt-1 text-2xl font-black text-tinta tabular-nums">
+            {jamMasuk === null && "Belum presensi"}
+            {jamMasuk !== null && jamPulang === null && `Masuk pukul ${formatJam(jamMasuk)}`}
+            {jamPulang !== null && `Pulang pukul ${formatJam(jamPulang)}`}
+          </p>
+          {jamMasuk !== null && (
+            <p className="mt-1 text-sm font-semibold text-redup">
+              {terlambat(jamMasuk) ? "Terlambat. " : "Tepat waktu. "}Contoh tampilan, belum tersimpan.
+            </p>
+          )}
+        </div>
         <div className="flex flex-wrap gap-3">
-          <button
-            type="button"
-            onClick={() => setJamMasuk(new Date())}
-            disabled={jamMasuk !== null}
-            className="rounded-md bg-sedap px-4 py-2 font-medium text-white hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
-          >
+          <button type="button" onClick={() => setJamMasuk(new Date())} disabled={jamMasuk !== null} className="tombol-utama px-6 py-3 text-lg">
+            <Ikon nama="masuk" />
             Catat Masuk
           </button>
           <button
             type="button"
             onClick={() => setJamPulang(new Date())}
             disabled={jamMasuk === null || jamPulang !== null}
-            className="rounded-md border border-sedap px-4 py-2 font-medium text-sedap hover:bg-sedap/5 disabled:cursor-not-allowed disabled:opacity-40"
+            className="tombol-kunyit px-6 py-3 text-lg"
           >
+            <Ikon nama="keluar" />
             Catat Pulang
           </button>
         </div>
-        <p className="mt-3 text-sm text-redup tabular-nums">
-          {jamMasuk === null && "Belum presensi hari ini."}
-          {jamMasuk !== null && `Masuk pukul ${formatJam(jamMasuk)}${terlambat(jamMasuk) ? " (terlambat)" : ""}.`}
-          {jamPulang !== null && ` Pulang pukul ${formatJam(jamPulang)}.`}
-          {jamMasuk !== null && " Contoh tampilan, belum tersimpan."}
-        </p>
-      </div>
+      </section>
 
-      <div className="rounded-lg bg-panel p-5 shadow-sm">
-        <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
-          <label className="text-sm font-medium">
-            Bulan
+      <section className="kartu overflow-hidden">
+        <div className="flex flex-wrap items-center justify-between gap-4 border-b-2 border-tinta p-5">
+          <label className="flex items-center gap-3 font-bold text-tinta">
+            Riwayat bulan
             <input
               type="month"
               value={bulan}
               onChange={(e) => e.target.value && router.replace(`/presensi?bulan=${e.target.value}`)}
-              className="ml-2 rounded-md border border-gray-300 px-2 py-1"
+              className="isian w-auto py-1.5"
             />
           </label>
           {status === "berhasil" && (
-            <p className="text-sm text-redup tabular-nums">
-              Hadir <strong className="text-teks">{data.length}</strong> hari · Terlambat{" "}
-              <strong className="text-teks">{jumlahTerlambat}</strong> hari
-            </p>
+            <div className="flex gap-3 tabular-nums">
+              <span className="rounded-xl border-2 border-tinta bg-sedap px-4 py-1.5 font-bold text-white">
+                <span className="text-xl font-black">{data.length}</span> hadir
+              </span>
+              <span className="rounded-xl border-2 border-tinta bg-ditolak/15 px-4 py-1.5 font-bold text-tinta">
+                <span className="text-xl font-black">{jumlahTerlambat}</span> terlambat
+              </span>
+            </div>
           )}
         </div>
 
-        {status === "memuat" && <Memuat />}
-        {status === "gagal" && <Gagal onCobaLagi={cobaLagi} />}
-        {status === "berhasil" && data.length === 0 && <Kosong teks={`Belum ada catatan presensi di ${formatBulan(bulan)}.`} />}
-        {status === "berhasil" && data.length > 0 && (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm tabular-nums">
-              <thead className="border-b border-gray-200 text-redup">
-                <tr>
-                  <th className="py-2 pr-4 font-medium">Tanggal</th>
-                  <th className="py-2 pr-4 font-medium">Jam Masuk</th>
-                  <th className="py-2 pr-4 font-medium">Jam Pulang</th>
-                  <th className="py-2 font-medium">Keterangan</th>
-                </tr>
-              </thead>
-              <tbody>
-                {data.map((p) => (
-                  <tr key={p.id} className="border-b border-gray-100">
-                    <td className="py-2 pr-4">{formatTanggal(p.tanggal)}</td>
-                    <td className="py-2 pr-4">{formatJam(p.jamMasuk)}</td>
-                    <td className="py-2 pr-4">{formatJam(p.jamPulang)}</td>
-                    <td className={`py-2 ${terlambat(p.jamMasuk) ? "font-medium text-ditolak" : "text-redup"}`}>
-                      {terlambat(p.jamMasuk) ? "Terlambat" : "Tepat waktu"}
-                    </td>
+        <div className="p-5">
+          {status === "memuat" && <Memuat />}
+          {status === "gagal" && <Gagal onCobaLagi={cobaLagi} />}
+          {status === "berhasil" && data.length === 0 && (
+            <Kosong teks={`Belum ada catatan presensi di ${formatBulan(bulan)}. Pilih bulan lain untuk melihat riwayat.`} />
+          )}
+          {status === "berhasil" && data.length > 0 && (
+            <div className="overflow-x-auto rounded-xl border-2 border-latar">
+              <table className="tabel">
+                <thead>
+                  <tr>
+                    <th>Tanggal</th>
+                    <th>Jam Masuk</th>
+                    <th>Jam Pulang</th>
+                    <th>Keterangan</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </div>
+                </thead>
+                <tbody>
+                  {data.map((p) => (
+                    <tr key={p.id} className={terlambat(p.jamMasuk) ? "bg-ditolak/5" : ""}>
+                      <td className="font-semibold">{formatTanggal(p.tanggal)}</td>
+                      <td>{formatJam(p.jamMasuk)}</td>
+                      <td>{formatJam(p.jamPulang)}</td>
+                      <td>
+                        {terlambat(p.jamMasuk) ? (
+                          <span className="font-extrabold text-red-700">Terlambat</span>
+                        ) : (
+                          <span className="font-semibold text-sedap">Tepat waktu</span>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+      </section>
     </div>
   );
 }
