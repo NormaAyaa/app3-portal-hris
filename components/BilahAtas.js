@@ -1,10 +1,18 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { usePengguna } from "@/lib/pengguna";
+import Ikon from "./Ikon";
 
 export default function BilahAtas() {
-  const { pengguna } = usePengguna();
+  const { pengguna, keluar } = usePengguna();
+  const router = useRouter();
+
+  async function tanganiKeluar() {
+    await keluar();
+    router.replace("/masuk");
+  }
 
   return (
     <header className="flex items-center justify-between gap-4 bg-sedap px-4 py-3 text-white md:px-6">
@@ -22,10 +30,21 @@ export default function BilahAtas() {
           </div>
           {/* Inisial nama sebagai avatar / Name initial as the avatar */}
           <span className="grid h-10 w-10 place-items-center rounded-full border border-tinta/10 bg-krem font-bold text-tinta">
-            {pengguna.nama.charAt(0)}
+            {(pengguna.nama || "U").charAt(0).toUpperCase()}
           </span>
+          <button
+            type="button"
+            onClick={tanganiKeluar}
+            title="Keluar dari akun"
+            aria-label="Keluar dari akun"
+            className="flex items-center gap-1.5 rounded-lg border border-white/20 bg-white/10 px-2.5 py-1.5 text-xs font-semibold text-white transition hover:bg-white/20"
+          >
+            <Ikon nama="keluar" className="h-4 w-4" />
+            <span className="hidden sm:inline">Keluar</span>
+          </button>
         </div>
       )}
     </header>
   );
 }
+

@@ -1,27 +1,86 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import { auth, db } from "@/lib/firebase";
+import { usePengguna } from "@/lib/pengguna";
 import KerangkaPublik from "@/components/KerangkaPublik";
 
-const PESAN_BELUM_DIPASANG = "Login belum dipasang. Dikerjakan di Sesi 6.";
+function terjemahkanGalatAuth(kode) {
+  switch (kode) {
+    case "auth/invalid-email":
+      return "Format email tidak valid.";
+    case "auth/user-not-found":
+    case "auth/wrong-password":
+    case "auth/invalid-credential":
+      return "Email atau kata sandi salah.";
+    case "auth/too-many-requests":
+      return "Terlalu banyak percobaan gagal. Silakan coba lagi nanti.";
+    case "auth/popup-closed-by-user":
+      return "Jendela masuk Google ditutup sebelum selesai.";
+    default:
+      return "Gagal masuk. Periksa kembali email dan kata sandi Anda.";
+  }
+}
 
-/**
- * Halaman Masuk (PRD 4.1). SENGAJA belum tersambung ke Firebase Auth.
- * Di Sesi 6 peserta mengganti isi fungsi kirim() dan masukGoogle().
- *
- * Sign-in page (PRD 4.1). DELIBERATELY not wired to Firebase Auth yet.
- * In Session 6 participants replace the bodies of kirim() and masukGoogle().
- */
-export default function HalamanMasuk() {
+function FormMasuk() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const tujuan = searchParams.get("tujuan") || searchParams.get("kembaliKe");
+  const { pengguna, memuat } = usePengguna();
+
   const [email, setEmail] = useState("");
   const [kataSandi, setKataSandi] = useState("");
   const [galat, setGalat] = useState({});
   const [pesan, setPesan] = useState("");
+  const [sedangMemproses, setSedangMemproses] = useState(false);
 
-  function kirim(e) {
+  // Jika sudah masuk, langsung arahkan ke halamannya (PRD 4.1)
+  useEffect(() => {
+    if (!memuat && pengguna) {
+      if (tujuan && (!tujuan.startsWith("/admin") || pengguna.role === "hrd")) {
+        router.replace(tujuan);
+      } else {
+        router.replace(pengguna.role === "hrd" ? "/admin" : "/beranda");
+      }
+    }
+  }, [pengguna, memuat, router, tujuan]);
+
+  async function arahkanSesuaiPeran(uid) {
+    try {
+      const userRef = doc(db, "users", uid);
+      const userSnap = await getDoc(userRef);
+      let role = "karyawan";
+
+      if (userSnap.exists()) {
+        role = userSnap.data()?.role || "karyawan";
+      } else {
+        // Buat profil jika belum ada (PRD 4.1)
+        const currentUser = auth.currentUser;
+        await setDoc(userRef, {
+          nama: currentUser?.displayName || email.split("@")[0] || "Pengguna",
+          email: currentUser?.email || email,
+          role: "karyawan",
+        });
+      }
+
+      if (tujuan && (!tujuan.startsWith("/admin") || role === "hrd")) {
+        router.replace(tujuan);
+      } else {
+        router.replace(role === "hrd" ? "/admin" : "/beranda");
+      }
+    } catch (err) {
+      console.error("Gagal memeriksa peran pengguna:", err);
+      // Fallback jika Firestore lambat
+      router.replace("/beranda");
+    }
+  }
+
+  async function kirim(e) {
     e.preventDefault();
-    // Validasi tampilan saja / Display-only validation
     const g = {};
     if (!email.trim()) g.email = "Email wajib diisi.";
     if (kataSandi.length < 6) g.kataSandi = "Kata sandi minimal 6 karakter.";
@@ -30,11 +89,32 @@ export default function HalamanMasuk() {
       setPesan("");
       return;
     }
-    setPesan(PESAN_BELUM_DIPASANG);
+
+    setSedangMemproses(true);
+    setPesan("");
+
+    try {
+      const hasil = await signInWithEmailAndPassword(auth, email.trim(), kataSandi);
+      await arahkanSesuaiPeran(hasil.user.uid);
+    } catch (err) {
+      setPesan(terjemahkanGalatAuth(err.code));
+      setSedangMemproses(false);
+    }
   }
 
-  function masukGoogle() {
-    setPesan(PESAN_BELUM_DIPASANG);
+  async function masukGoogle() {
+    setSedangMemproses(true);
+    setPesan("");
+    try {
+      const provider = new GoogleAuthProvider();
+      const hasil = await signInWithPopup(auth, provider);
+      await arahkanSesuaiPeran(hasil.user.uid);
+    } catch (err) {
+      if (err.code !== "auth/popup-closed-by-user") {
+        setPesan(terjemahkanGalatAuth(err.code));
+      }
+      setSedangMemproses(false);
+    }
   }
 
   return (
@@ -47,6 +127,7 @@ export default function HalamanMasuk() {
             type="email"
             autoComplete="email"
             value={email}
+            disabled={sedangMemproses}
             onChange={(e) => setEmail(e.target.value)}
             className="isian"
           />
@@ -59,13 +140,18 @@ export default function HalamanMasuk() {
             type="password"
             autoComplete="current-password"
             value={kataSandi}
+            disabled={sedangMemproses}
             onChange={(e) => setKataSandi(e.target.value)}
             className="isian"
           />
           {galat.kataSandi && <p className="galat">{galat.kataSandi}</p>}
         </div>
-        <button type="submit" className="tombol-utama w-full py-3 text-lg">
-          Masuk
+        <button
+          type="submit"
+          disabled={sedangMemproses}
+          className="tombol-utama w-full py-3 text-lg disabled:opacity-60"
+        >
+          {sedangMemproses ? "Memproses..." : "Masuk"}
         </button>
       </form>
 
@@ -75,7 +161,12 @@ export default function HalamanMasuk() {
         <span className="h-0.5 flex-1 bg-tinta/15" />
       </div>
 
-      <button type="button" onClick={masukGoogle} className="tombol-kedua w-full py-3">
+      <button
+        type="button"
+        onClick={masukGoogle}
+        disabled={sedangMemproses}
+        className="tombol-kedua w-full py-3 disabled:opacity-60"
+      >
         <span className="grid h-6 w-6 place-items-center rounded-full bg-kunyit text-sm font-bold text-tinta">G</span>
         Masuk dengan Google
       </button>
@@ -95,3 +186,12 @@ export default function HalamanMasuk() {
     </KerangkaPublik>
   );
 }
+
+export default function HalamanMasuk() {
+  return (
+    <Suspense fallback={<div className="p-8 text-center text-redup">Memuat...</div>}>
+      <FormMasuk />
+    </Suspense>
+  );
+}
+

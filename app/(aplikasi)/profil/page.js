@@ -1,19 +1,50 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { doc, updateDoc } from "firebase/firestore";
+import { updateProfile } from "firebase/auth";
+import { db, auth } from "@/lib/firebase";
 import { usePengguna } from "@/lib/pengguna";
 import KepalaHalaman from "@/components/KepalaHalaman";
 
-// Profil (PRD 4.5). Nama bisa diubah di tampilan, belum disimpan / Profile (PRD 4.5). Name is editable on screen, not saved yet
+// Profil (PRD 4.5). Nama bisa diubah di tampilan dan disimpan ke Firestore
 export default function HalamanProfil() {
   const { pengguna } = usePengguna();
-  const [nama, setNama] = useState(pengguna.nama);
+  const [nama, setNama] = useState(pengguna?.nama || "");
   const [pesan, setPesan] = useState("");
+  const [sedangMenyimpan, setSedangMenyimpan] = useState(false);
 
-  function simpan(e) {
+  useEffect(() => {
+    if (pengguna?.nama) {
+      setNama(pengguna.nama);
+    }
+  }, [pengguna?.nama]);
+
+  async function simpan(e) {
     e.preventDefault();
-    setPesan(nama.trim() ? "Nama diperbarui (contoh, belum tersimpan)." : "Nama wajib diisi.");
+    if (!nama.trim()) {
+      setPesan("Nama wajib diisi.");
+      return;
+    }
+    if (!pengguna?.uid) return;
+
+    setSedangMenyimpan(true);
+    setPesan("");
+    try {
+      await updateDoc(doc(db, "users", pengguna.uid), {
+        nama: nama.trim(),
+      });
+      if (auth.currentUser) {
+        await updateProfile(auth.currentUser, { displayName: nama.trim() });
+      }
+      setPesan("Nama berhasil diperbarui.");
+    } catch (err) {
+      setPesan("Gagal menyimpan nama: " + err.message);
+    } finally {
+      setSedangMenyimpan(false);
+    }
   }
+
 
   return (
     <div className="max-w-2xl space-y-8">
