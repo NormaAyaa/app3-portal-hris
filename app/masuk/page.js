@@ -97,7 +97,9 @@ function FormMasuk() {
       const hasil = await signInWithEmailAndPassword(auth, email.trim(), kataSandi);
       await arahkanSesuaiPeran(hasil.user.uid);
     } catch (err) {
-      setPesan(terjemahkanGalatAuth(err.code));
+      console.error("Gagal masuk:", err);
+      const pesanGalat = terjemahkanGalatAuth(err.code);
+      setPesan(err.code ? `${pesanGalat} (${err.code})` : (err.message || pesanGalat));
       setSedangMemproses(false);
     }
   }

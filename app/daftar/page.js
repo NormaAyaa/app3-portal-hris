@@ -73,7 +73,9 @@ export default function HalamanDaftar() {
 
       router.replace("/beranda");
     } catch (err) {
-      setPesan(terjemahkanGalatAuth(err.code));
+      console.error("Gagal mendaftar:", err);
+      const pesanGalat = terjemahkanGalatAuth(err.code);
+      setPesan(err.code ? `${pesanGalat} (${err.code})` : (err.message || pesanGalat));
       setSedangMemproses(false);
     }
   }
